@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/itCart"
+        android:title="Cart"
+        android:icon="@drawable/ic_cart"
+        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/custom_item_cart"/>
+    <item
+        android:id="@+id/itChat"
+        android:title="Chat"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_chat"
+        app:actionLayout="@layout/custom_item_chat"/>
+</menu>

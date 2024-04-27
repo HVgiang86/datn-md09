@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dp"
+            android:layout_above="@id/ln_bottom"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <ImageView
+                android:id="@+id/iv_product"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_money"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_marginStart="10dp"
+                    android:orientation="vertical"
+                    android:layout_weight="7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"
+                            android:text="Name : "
+                            android:layout_marginBottom="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="20sp"
+                            android:id="@+id/tv_product_name"
+                            android:textColor="@color/blue1"
+                            android:text="Rolex thụy sĩ"
+                            android:layout_marginBottom="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"
+                            android:text="The origin : "
+                            android:layout_marginBottom="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="20sp"
+                            android:id="@+id/tv_product_origin"
+                            android:textColor="@color/blue1"
+                            android:text="Rolex thụy sĩ"
+                            android:layout_marginBottom="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"
+                            android:text="Material : "
+                            android:layout_marginBottom="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="20sp"
+                            android:id="@+id/tv_product_material"
+                            android:textColor="@color/blue1"
+                            android:text="Rolex thụy sĩ"
+                            android:layout_marginBottom="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"
+                            android:text="Description : "
+                            android:layout_marginBottom="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="20sp"
+                            android:id="@+id/tv_product_description"
+                            android:textColor="@color/blue1"
+                            android:text="Rolex thụy sĩ"
+                            android:layout_marginBottom="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </TableRow>
+
+
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="18sp"
+                            android:textColor="@color/black"
+                            android:text="Price : "
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="18sp"
+                            android:id="@+id/tv_product_price"
+                            android:textColor="@color/blue1"
+                            android:text="9$"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_marginTop="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="18sp"
+                            android:textColor="@color/black"
+                            android:text="Rating : "
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="18sp"
+                            android:id="@+id/tv_product_vote"
+                            android:textColor="@color/blue1"
+                            android:text="5"
+                            android:layout_marginEnd="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <ImageView
+                            android:src="@drawable/ic_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </TableRow>
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/iv_add_product"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_cart2"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"/>
+                </FrameLayout>
+
+            </LinearLayout>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="18sp"
+                android:id="@+id/tv_product_comment"
+                android:textColor="@color/black"
+                android:text="Comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="10dp"
+                android:id="@+id/rcv_comment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ln_bottom"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/ln_comment"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="64dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="8"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rating : "
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/tv_rate_promotion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:hint="4"
+                            android:background="@color/white"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:src="@drawable/ic_start" />
+                    </TableRow>
+
+                    <EditText
+                        android:id="@+id/tv_comment_product"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:gravity="start"
+                        android:background="@color/white"
+                        android:paddingVertical="4dp"
+                        android:hint="Comment"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/iv_product_send"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_send" />
+            </LinearLayout>
+
+            <TextView
+                android:visibility="gone"
+                android:background="@color/blue1"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/tv_product_order"
+                android:layout_width="match_parent"
+                android:text="Đặt đơn : 75000đ"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:paddingVertical="10dp"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

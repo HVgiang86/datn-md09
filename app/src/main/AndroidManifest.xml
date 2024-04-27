@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.DATN_MD09"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+        <activity
+            android:name=".Views.AcountScreen.AcountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.NotifiScreen.NotifiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.PayScreen.PayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.CartScreen.CartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.DetailScreen.DetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.RegisterScreen.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.LoginScreen.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.HomeScreen.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.splash_screen.SplashActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

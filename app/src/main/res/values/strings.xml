@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">FModel</string>
+    <string name="open">Mở</string>
+    <string name="close">Đóng</string>
+    <string name="facebook_app_id">1897289204022516</string>
+    <string name="fb_login_protocol_scheme">fb1897289204022516</string>
+    <string name="facebook_client_token">56789</string>
+    <string name="login">Login</string>
+    <string name="shirt_menu">Danh sách áo</string>
+
+</resources>

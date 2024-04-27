@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.DATN_MD09" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/blue2</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.DATN_MD09" parent="Base.Theme.DATN_MD09" />
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/blue1</item>
+    </style>
+
+    <style name="CircleShape" parent="Widget.MaterialComponents.ShapeableImageView">
+        <item name="background">@drawable/circle_shape</item>
+<!--        <app:shapeAppearance>-->
+<!--            <cornerRadius topLeft="50%" topRight="50%" bottomRight="50%" bottomLeft="50%"/>-->
+<!--        </app:shapeAppearance>-->
+    </style>
+</resources>
