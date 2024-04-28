@@ -1,5 +1,6 @@
 package poly.manhnt.datn_md09.Views.HomeScreen;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -10,6 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 
 import androidx.annotation.NonNull;
@@ -29,20 +34,23 @@ import java.util.List;
 
 import poly.manhnt.datn_md09.Adapters.NoiBatAdapter;
 import poly.manhnt.datn_md09.Adapters.ViewPagerAdapter;
+import poly.manhnt.datn_md09.DataManager;
 import poly.manhnt.datn_md09.Models.Objects.ILoadMore;
 import poly.manhnt.datn_md09.Models.Objects.LoaiSanPham;
+import poly.manhnt.datn_md09.Models.ProductCategory;
 import poly.manhnt.datn_md09.Models.ProductResponse;
 import poly.manhnt.datn_md09.Presenters.HomePresenter.MenuPresenter.MenuPresenter;
+import poly.manhnt.datn_md09.Presenters.HomePresenter.ProductPresent.ProductContract;
+import poly.manhnt.datn_md09.Presenters.HomePresenter.ProductPresent.ProductPresenter;
 import poly.manhnt.datn_md09.R;
 import poly.manhnt.datn_md09.Views.CartScreen.CartActivity;
 import poly.manhnt.datn_md09.Views.DetailScreen.DetailActivity;
-import poly.manhnt.datn_md09.api.ApiService;
-import poly.manhnt.datn_md09.api.RetrofitClient;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import poly.manhnt.datn_md09.databinding.ActivityHomeBinding;
 
-public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnProductClickListener, MenuView {
+public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnProductClickListener, MenuView, ProductContract.View {
+    public static String EXTRA_PRODUCT_ID = "productId";
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final List<ProductResponse> displayList = new ArrayList();
     Toolbar toolbar;
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -54,15 +62,19 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     RecyclerView recyclerView;
     NoiBatAdapter noiBatAdapter;
     private int currentPosition = 0;
-    private List<ProductResponse> productResponseList;
-    private final Handler handler = new Handler(Looper.getMainLooper());
 
+    private PriceSortMode priceSortMode = PriceSortMode.UNSORTED;
+    private List<ProductResponse> productResponseList;
     private MenuPresenter menuPresenter;
+    private ProductPresenter productPresenter;
+    private ActivityHomeBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mBinding = ActivityHomeBinding.inflate(getLayoutInflater());
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(mBinding.getRoot());
         toolbar = findViewById(R.id.toolbar);
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
@@ -75,8 +87,10 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         //TODO: MinhNTn fake data
         fakeDataProduct();
 
-//        menuPresenter = new MenuPresenter(this);
+        menuPresenter = new MenuPresenter(this);
+        productPresenter = new ProductPresenter(this);
 //        menuPresenter.LayDanhSachMenu();
+
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
         noiBatAdapter = new NoiBatAdapter(this, productResponseList);
@@ -108,44 +122,112 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         }
 
         int scrollLimit = 256;
-        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                float alpha = Math.min(1, (float) scrollY / scrollLimit);
-                int alphaInt = (int) (alpha * 255);
-                if (scrollY > oldScrollY) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getWindow().setStatusBarColor(Color.argb(alphaInt, 0, 169, 255));
-                    }
-                    toolbar.setBackgroundColor(Color.argb(alphaInt, 0, 169, 255));
-                    drawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
-                } else if (scrollY == 0) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getWindow().setStatusBarColor(Color.TRANSPARENT);
-                    }
-                    toolbar.setBackgroundColor(Color.TRANSPARENT);
-                    drawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.blue1));
+
+        scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            float alpha = Math.min(1, (float) scrollY / scrollLimit);
+            int alphaInt = (int) (alpha * 255);
+            if (scrollY > oldScrollY) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(Color.argb(alphaInt, 0, 169, 255));
                 }
+                toolbar.setBackgroundColor(Color.argb(alphaInt, 0, 169, 255));
+                drawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
+            } else if (scrollY == 0) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(Color.TRANSPARENT);
+                }
+                toolbar.setBackgroundColor(Color.TRANSPARENT);
+                drawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.blue1));
+            }
+
+            if (scrollY > 270) {
+                showStickyFilterBar();
+            } else {
+                hideStickyFilterBar();
             }
         });
+
+        mBinding.textPriceSort.setOnClickListener(v -> {
+            if (priceSortMode == PriceSortMode.UNSORTED) priceSortMode = PriceSortMode.ASC;
+            else if (priceSortMode == PriceSortMode.ASC) priceSortMode = PriceSortMode.DESC;
+            else if (priceSortMode == PriceSortMode.DESC) priceSortMode = PriceSortMode.ASC;
+
+            if (priceSortMode == PriceSortMode.ASC) {
+                mBinding.textPriceSort.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_price_asc, 0);
+                mBinding.textPriceSortFixed.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_price_asc, 0);
+                sortPriceAsc();
+            }
+            if (priceSortMode == PriceSortMode.DESC) {
+                mBinding.textPriceSort.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_price_desc, 0);
+                mBinding.textPriceSortFixed.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_price_desc, 0);
+                sortPriceDesc();
+            }
+        });
+
+        mBinding.textPriceSortFixed.setOnClickListener(v -> {
+            if (priceSortMode == PriceSortMode.UNSORTED) priceSortMode = PriceSortMode.ASC;
+            else if (priceSortMode == PriceSortMode.ASC) priceSortMode = PriceSortMode.DESC;
+            else if (priceSortMode == PriceSortMode.DESC) priceSortMode = PriceSortMode.ASC;
+
+            if (priceSortMode == PriceSortMode.ASC) {
+                mBinding.textPriceSortFixed.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_price_asc, 0);
+                mBinding.textPriceSort.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_price_asc, 0);
+                sortPriceAsc();
+            }
+            if (priceSortMode == PriceSortMode.DESC) {
+                mBinding.textPriceSortFixed.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_price_desc, 0);
+                mBinding.textPriceSort.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_price_desc, 0);
+                sortPriceDesc();
+            }
+        });
+
+        mBinding.searchEdt.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                productPresenter.searchProductByName(mBinding.searchEdt.getText().toString().trim());
+                hideKeyboard();
+                scrollView.scrollTo(0,0);
+
+                return true;
+            }
+            return false;
+        });
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void sortPriceAsc() {
+        scrollView.scrollTo(0,0);
+        noiBatAdapter.sortPriceAsc();
+    }
+
+    private void sortPriceDesc() {
+        scrollView.scrollTo(0,0);
+        noiBatAdapter.sortPriceDesc();
+    }
+
+    private void hideStickyFilterBar() {
+        mBinding.filterContainer.setVisibility(View.VISIBLE);
+        mBinding.filterContainerFixed.setVisibility(View.INVISIBLE);
+    }
+
+    private void showStickyFilterBar() {
+        mBinding.filterContainer.setVisibility(View.INVISIBLE);
+        mBinding.filterContainerFixed.setVisibility(View.VISIBLE);
     }
 
     private void initData() {
-        RetrofitClient.getInstance().create(ApiService.class).getListProduct().enqueue(new Callback<List<ProductResponse>>() {
-            @Override
-            public void onResponse(Call<List<ProductResponse>> call, Response<List<ProductResponse>> response) {
-                if (response.isSuccessful()) {
-                    noiBatAdapter.updateData(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<ProductResponse>> call, Throwable t) {
-
-            }
-        });
+        menuPresenter.getCategories();
+        productPresenter.getProductPage(2);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -167,16 +249,13 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     }
 
     private void startAutoScroll() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                currentPosition++;
-                if (currentPosition >= viewPagerAdapter.getCount()) {
-                    currentPosition = 0;
-                }
-                viewPager.setCurrentItem(currentPosition);
-                startAutoScroll();
+        handler.postDelayed(() -> {
+            currentPosition++;
+            if (currentPosition >= viewPagerAdapter.getCount()) {
+                currentPosition = 0;
             }
+            viewPager.setCurrentItem(currentPosition);
+            startAutoScroll();
         }, 3000);
     }
 
@@ -205,10 +284,89 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         startActivity(intent);
     }
 
-    public static String EXTRA_PRODUCT_ID = "productId";
-
     @Override
     public void HienThiDanhSachMenu(List<LoaiSanPham> loaiSanPhamList) {
         //TODO Implement
+    }
+
+    @Override
+    public void onGetCategoriesSuccess(List<ProductCategory> categories) {
+        initFilterBar(categories);
+        System.out.println("Init filterbar");
+    }
+
+    public void initFilterBar(List<ProductCategory> categories) {
+        List<String> categoryNames = new ArrayList<>();
+        categoryNames.add("Tất cả");
+        for (ProductCategory c : categories) {
+            categoryNames.add(c.name);
+        }
+
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categoryNames);
+        mBinding.spinnerCategory.setAdapter(categoryAdapter);
+        mBinding.spinnerCategoryFixed.setAdapter(categoryAdapter);
+
+        mBinding.spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mBinding.spinnerCategoryFixed.setSelection(position);
+                filterByCategory(categoryNames.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        mBinding.spinnerCategoryFixed.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mBinding.spinnerCategory.setSelection(position);
+                filterByCategory(categoryNames.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onGetProductPageSuccess(int page, List<ProductResponse> productResponseList) {
+        this.productResponseList = productResponseList;
+        noiBatAdapter.updateData(productResponseList);
+    }
+
+    @Override
+    public void onSearchProductSuccess(List<ProductResponse> productResponseList) {
+        this.productResponseList = productResponseList;
+        noiBatAdapter.updateData(productResponseList);
+    }
+
+    private void filterByCategory(String categoryName) {
+        String categoryId = "";
+        for (ProductCategory pc : DataManager.getInstance().categories) {
+            if (pc.name.equals(categoryName)) {
+                categoryId = pc._id;
+                break;
+            }
+        }
+        if (categoryName.equals("Tất cả")) {
+            noiBatAdapter.updateData(productResponseList);
+        } else {
+            displayList.clear();
+            for (ProductResponse pr : productResponseList) {
+                if (pr.category_id._id.equals(categoryId)) {
+                    displayList.add(pr);
+                }
+            }
+
+            noiBatAdapter.updateData(displayList);
+        }
+    }
+
+    private void searchByName(String s) {
+        productPresenter.searchProductByName(s);
     }
 }

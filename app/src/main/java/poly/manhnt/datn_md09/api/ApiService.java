@@ -2,10 +2,12 @@ package poly.manhnt.datn_md09.api;
 
 import java.util.List;
 
+import poly.manhnt.datn_md09.Models.CategoryIdResponse;
 import poly.manhnt.datn_md09.Models.MessageResponse;
 import poly.manhnt.datn_md09.Models.ProductComment.ProductComment;
 import poly.manhnt.datn_md09.Models.ProductDetail.ProductDetailResponse;
 import poly.manhnt.datn_md09.Models.ProductResponse;
+import poly.manhnt.datn_md09.Models.ProductSearch.ProductSearchResponse;
 import poly.manhnt.datn_md09.Models.ProductSizeColor.ProductSizeColorResponse;
 import poly.manhnt.datn_md09.Models.model_login.LoginRequest;
 import poly.manhnt.datn_md09.Models.model_login.LoginResponse;
@@ -16,6 +18,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
 
@@ -25,8 +28,8 @@ public interface ApiService {
     @POST("users")
     Call<RegisterResponse> registerUser(@Body RegisterRequest registerRequest);
 
-    @GET("products/2")
-    Call<List<ProductResponse>> getListProduct();
+    @GET("products/{page}")
+    Call<List<ProductResponse>> getListProduct(@Path("page") int page);
 
     @GET("product-by-id/{id}")
     Call<ProductDetailResponse> getProductDetail(@Path("id") String productId);
@@ -39,4 +42,10 @@ public interface ApiService {
 
     @POST("addCart/{uid}/{size_color_id}")
     Call<MessageResponse> addCart(@Path("uid") String uid, @Path("size_color_id") String sizeColorId);
+
+    @GET("categorys")
+    Call<CategoryIdResponse> getCategories();
+
+    @GET("products")
+    Call<ProductSearchResponse> searchByName(@Query("searchValues") String searchValue);
 }

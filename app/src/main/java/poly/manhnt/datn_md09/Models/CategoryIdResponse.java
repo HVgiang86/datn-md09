@@ -1,6 +1,10 @@
 package poly.manhnt.datn_md09.Models;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 public class CategoryIdResponse {
-    public String _id;
-    public String name;
+    @SerializedName("listCategorys")
+    public List<ProductCategory> categories;
 }

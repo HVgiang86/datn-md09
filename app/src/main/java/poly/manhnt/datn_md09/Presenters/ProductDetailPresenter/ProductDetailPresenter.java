@@ -111,6 +111,7 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
                     if (response.isSuccessful()) {
                         if (response.body() != null) {
                             view.onGetProductSizeColorSuccess(response.body().productSizeColors);
+
                         }
                     } else {
                         view.onGetCommentFail(new Exception("Get fail! Status code: " + response.code()));

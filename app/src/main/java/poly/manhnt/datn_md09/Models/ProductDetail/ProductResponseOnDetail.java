@@ -2,7 +2,7 @@ package poly.manhnt.datn_md09.Models.ProductDetail;
 
 import java.util.ArrayList;
 
-import poly.manhnt.datn_md09.Models.CategoryIdResponse;
+import poly.manhnt.datn_md09.Models.ProductCategory;
 import poly.manhnt.datn_md09.Models.ProductResponse;
 
 public class ProductResponseOnDetail {
@@ -23,13 +23,12 @@ public class ProductResponseOnDetail {
         rp.name = name;
         rp.description = description;
         rp.image = image;
-        rp.category_id = new CategoryIdResponse();
+        rp.category_id = new ProductCategory();
         rp.category_id._id = category_id;
         rp.price = price;
         rp.discount = discount;
         rp.createdAt = createdAt;
         rp.__v = __v;
-        rp.updatedAt = updatedAt;
         return rp;
     }
 }

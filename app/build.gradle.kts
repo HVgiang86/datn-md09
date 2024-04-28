@@ -50,7 +50,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
+    implementation("se.emilsjolander:StickyScrollViewItems:1.1.0")
 
 
 }

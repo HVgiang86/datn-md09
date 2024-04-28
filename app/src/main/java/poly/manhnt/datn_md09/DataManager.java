@@ -1,5 +1,9 @@
 package poly.manhnt.datn_md09;
 
+import java.util.List;
+
+import poly.manhnt.datn_md09.Models.CategoryIdResponse;
+import poly.manhnt.datn_md09.Models.ProductCategory;
 import poly.manhnt.datn_md09.Models.model_login.LoginResponse;
 
 public class DataManager {
@@ -15,4 +19,5 @@ public class DataManager {
     }
 
     public LoginResponse getUserLogin;
+    public List<ProductCategory> categories;
 }

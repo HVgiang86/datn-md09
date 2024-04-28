@@ -7,11 +7,14 @@ public class ProductResponse {
     public String name;
     public String description;
     public ArrayList<String> image;
-    public CategoryIdResponse category_id;
+    public ProductCategory category_id;
     public int price;
     public Object discount;
     public String createdAt;
     public int __v;
-    public String updatedAt;
+
+    public int getPrice() {
+        return price;
+    }
 
 }

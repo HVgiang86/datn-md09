@@ -8,9 +8,16 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import poly.manhnt.datn_md09.ConnectInternet.DownloadJson;
+import poly.manhnt.datn_md09.DataManager;
+import poly.manhnt.datn_md09.Models.CategoryIdResponse;
 import poly.manhnt.datn_md09.Models.HomeModel.MenuModel.MenuModel;
 import poly.manhnt.datn_md09.Models.Objects.LoaiSanPham;
 import poly.manhnt.datn_md09.Views.HomeScreen.MenuView;
+import poly.manhnt.datn_md09.api.ApiService;
+import poly.manhnt.datn_md09.api.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MenuPresenter implements IPresenterMenu {
     MenuView menuView;
@@ -18,6 +25,7 @@ public class MenuPresenter implements IPresenterMenu {
     public MenuPresenter(MenuView menuView) {
         this.menuView = menuView;
     }
+
 
     @Override
     public void LayDanhSachMenu() {
@@ -50,6 +58,29 @@ public class MenuPresenter implements IPresenterMenu {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void getCategories() {
+        try {
+            Log.d("HEHE", "get categories");
+            RetrofitClient.getInstance().create(ApiService.class).getCategories().enqueue(new Callback<CategoryIdResponse>() {
+                @Override
+                public void onResponse(Call<CategoryIdResponse> call, Response<CategoryIdResponse> response) {
+                    if (response.isSuccessful()) {
+                        DataManager.getInstance().categories = response.body().categories;
+                        menuView.onGetCategoriesSuccess(response.body().categories);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CategoryIdResponse> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
