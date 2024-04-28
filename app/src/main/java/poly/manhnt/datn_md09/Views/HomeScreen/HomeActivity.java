@@ -38,6 +38,7 @@ import poly.manhnt.datn_md09.DataManager;
 import poly.manhnt.datn_md09.Models.Objects.ILoadMore;
 import poly.manhnt.datn_md09.Models.Objects.LoaiSanPham;
 import poly.manhnt.datn_md09.Models.ProductCategory;
+import poly.manhnt.datn_md09.Models.ProductQuantity.ProductQuantity;
 import poly.manhnt.datn_md09.Models.ProductResponse;
 import poly.manhnt.datn_md09.Presenters.HomePresenter.MenuPresenter.MenuPresenter;
 import poly.manhnt.datn_md09.Presenters.HomePresenter.ProductPresent.ProductContract;
@@ -183,9 +184,9 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
 
         mBinding.searchEdt.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                productPresenter.searchProductByName(mBinding.searchEdt.getText().toString().trim());
+                searchByName(mBinding.searchEdt.getText().toString().trim());
                 hideKeyboard();
-                scrollView.scrollTo(0,0);
+                scrollView.scrollTo(0, 0);
 
                 return true;
             }
@@ -205,12 +206,12 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     }
 
     private void sortPriceAsc() {
-        scrollView.scrollTo(0,0);
+        scrollView.scrollTo(0, 0);
         noiBatAdapter.sortPriceAsc();
     }
 
     private void sortPriceDesc() {
-        scrollView.scrollTo(0,0);
+        scrollView.scrollTo(0, 0);
         noiBatAdapter.sortPriceDesc();
     }
 
@@ -226,7 +227,7 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
 
     private void initData() {
         menuPresenter.getCategories();
-        productPresenter.getProductPage(2);
+        productPresenter.getProductPage(1);
     }
 
     @Override
@@ -336,12 +337,36 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     public void onGetProductPageSuccess(int page, List<ProductResponse> productResponseList) {
         this.productResponseList = productResponseList;
         noiBatAdapter.updateData(productResponseList);
+
+        for (ProductResponse pr : productResponseList) {
+            productPresenter.getProductQuantity(pr._id);
+        }
     }
 
     @Override
     public void onSearchProductSuccess(List<ProductResponse> productResponseList) {
         this.productResponseList = productResponseList;
         noiBatAdapter.updateData(productResponseList);
+
+        for (ProductResponse pr : productResponseList) {
+            productPresenter.getProductQuantity(pr._id);
+        }
+    }
+
+    @Override
+    public void onGetProductQuantitySuccess(String productId, int quantity) {
+        ProductQuantity pq = new ProductQuantity();
+        pq.productId = productId;
+        pq.quantity = quantity;
+
+        DataManager.getInstance().productQuantityList.add(pq);
+        int index = -1;
+        for (ProductResponse pr : productResponseList) {
+            if (pr._id.equals(productId)) index = productResponseList.indexOf(pr);
+        }
+        if (index != -1) {
+            noiBatAdapter.notifyItemChanged(index);
+        }
     }
 
     private void filterByCategory(String categoryName) {
@@ -367,6 +392,7 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     }
 
     private void searchByName(String s) {
-        productPresenter.searchProductByName(s);
+        if (s.isEmpty()) productPresenter.getProductPage(2);
+        else productPresenter.searchProductByName(s);
     }
 }

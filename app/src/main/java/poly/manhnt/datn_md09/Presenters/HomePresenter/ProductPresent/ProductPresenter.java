@@ -5,6 +5,7 @@ import java.util.List;
 
 import poly.manhnt.datn_md09.Models.ProductResponse;
 import poly.manhnt.datn_md09.Models.ProductSearch.ProductSearchResponse;
+import poly.manhnt.datn_md09.Models.ProductSizeColor.ProductSizeColorResponse;
 import poly.manhnt.datn_md09.api.ApiService;
 import poly.manhnt.datn_md09.api.RetrofitClient;
 import retrofit2.Call;
@@ -56,6 +57,29 @@ public class ProductPresenter implements ProductContract.Presenter {
 
                 @Override
                 public void onFailure(Call<ProductSearchResponse> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void getProductQuantity(String productId) {
+        try {
+            RetrofitClient.getInstance().create(ApiService.class).getProductSizeColor(productId).enqueue(new Callback<ProductSizeColorResponse>() {
+                @Override
+                public void onResponse(Call<ProductSizeColorResponse> call, Response<ProductSizeColorResponse> response) {
+                    if (response.isSuccessful()) {
+                        int quantity = response.body().productSizeColors.stream().mapToInt(productSizeColor -> productSizeColor.quantity).sum();
+                        mView.onGetProductQuantitySuccess(productId, quantity);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProductSizeColorResponse> call, Throwable t) {
                     t.printStackTrace();
                 }
             });

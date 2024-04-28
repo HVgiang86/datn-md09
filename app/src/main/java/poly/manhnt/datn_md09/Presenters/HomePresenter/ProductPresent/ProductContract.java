@@ -10,11 +10,15 @@ public interface ProductContract {
         void onGetProductPageSuccess(int page, List<ProductResponse> productResponseList);
 
         void onSearchProductSuccess(List<ProductResponse> productResponseList);
+
+        void onGetProductQuantitySuccess(String productId, int quantity);
     }
 
     interface Presenter {
         void getProductPage(int page);
 
         void searchProductByName(String name);
+
+        void getProductQuantity(String productId);
     }
 }

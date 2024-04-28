@@ -9,5 +9,8 @@ public class ProductSizeColor {
     public ProductSize size;
     @SerializedName("color_id")
     public ProductColor color;
+
+    @SerializedName("quantity")
+    public int quantity;
 }
 

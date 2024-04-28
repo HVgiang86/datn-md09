@@ -2,6 +2,7 @@ package poly.manhnt.datn_md09.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,9 +17,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import poly.manhnt.datn_md09.DataManager;
+import poly.manhnt.datn_md09.Models.ProductQuantity.ProductQuantity;
 import poly.manhnt.datn_md09.Models.ProductResponse;
 import poly.manhnt.datn_md09.R;
 import poly.manhnt.datn_md09.databinding.CustomRecyclerNoiBatBinding;
+import poly.manhnt.datn_md09.utils.Utils;
 
 
 public class NoiBatAdapter extends RecyclerView.Adapter<NoiBatAdapter.ViewHolder> {
@@ -53,8 +57,33 @@ public class NoiBatAdapter extends RecyclerView.Adapter<NoiBatAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ProductResponse productResponse = list.get(position);
         holder.textView.setText(productResponse.name);
-        Glide.with(context).load(productResponse.image.get(0)).placeholder(R.drawable.backgroundplashscreen).error(R.drawable.backgroundplashscreen).into(holder.imvBackground);
+
         holder.tvPrice.setText(productResponse.price + "$");
+
+        List<ProductQuantity> quantities = DataManager.getInstance().productQuantityList;
+
+        boolean check = false;
+        for (ProductQuantity pq : quantities) {
+            if (Utils.compare(productResponse._id, pq.productId)) {
+                if (pq.quantity == 0) {
+                    holder.binding.imvBackground.setVisibility(View.GONE);
+                    holder.binding.containerSoldOut.setVisibility(View.VISIBLE);
+                    Glide.with(holder.itemView.getContext()).load(productResponse.image.get(0)).placeholder(R.drawable.backgroundplashscreen).error(R.drawable.backgroundplashscreen).into(holder.imvBackground);
+                } else {
+                    holder.binding.imvBackground.setVisibility(View.VISIBLE);
+                    holder.binding.containerSoldOut.setVisibility(View.GONE);
+                    Glide.with(context).load(productResponse.image.get(0)).placeholder(R.drawable.backgroundplashscreen).error(R.drawable.backgroundplashscreen).into(holder.imvBackground);
+                }
+                check = true;
+            }
+        }
+
+        if (!check) {
+            holder.binding.imvBackground.setVisibility(View.VISIBLE);
+            holder.binding.containerSoldOut.setVisibility(View.GONE);
+            Glide.with(context).load(productResponse.image.get(0)).placeholder(R.drawable.backgroundplashscreen).error(R.drawable.backgroundplashscreen).into(holder.imvBackground);
+
+        }
 
         holder.itemView.setOnClickListener(v -> {
             String id = list.get(position)._id;

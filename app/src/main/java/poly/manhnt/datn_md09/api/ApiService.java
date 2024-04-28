@@ -48,4 +48,5 @@ public interface ApiService {
 
     @GET("products")
     Call<ProductSearchResponse> searchByName(@Query("searchValues") String searchValue);
+
 }

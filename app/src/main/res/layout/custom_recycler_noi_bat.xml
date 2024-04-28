@@ -22,6 +22,30 @@
             android:layout_height="185dp"
             android:scaleType="centerCrop"
             android:src="@drawable/backgroundplashscreen"/>
+        <FrameLayout
+            android:id="@+id/container_sold_out"
+            android:layout_width="match_parent"
+            android:layout_height="185dp"
+            android:visibility="gone"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Hết Hàng!"
+                android:textSize="32sp"
+                android:textColor="@color/white"
+                android:background="@drawable/sold_out_mask_bg"
+                android:elevation="2dp"
+                android:gravity="center"
+                />
+
+            <ImageView
+                android:id="@+id/imvBackground1"
+                android:layout_width="match_parent"
+                android:layout_height="185dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/backgroundplashscreen"/>
+        </FrameLayout>
         <TextView
             android:id="@+id/txtTieuDeNoiBat"
             android:layout_width="match_parent"
