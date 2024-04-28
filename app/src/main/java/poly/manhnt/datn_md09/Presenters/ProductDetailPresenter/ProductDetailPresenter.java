@@ -1,12 +1,13 @@
 package poly.manhnt.datn_md09.Presenters.ProductDetailPresenter;
 
 import java.util.List;
-import java.util.Objects;
 
+import poly.manhnt.datn_md09.Models.MessageResponse;
 import poly.manhnt.datn_md09.Models.ProductComment.ProductComment;
 import poly.manhnt.datn_md09.Models.ProductDetail.ProductDetailResponse;
 import poly.manhnt.datn_md09.Models.ProductDetail.ProductResponseOnDetail;
 import poly.manhnt.datn_md09.Models.ProductResponse;
+import poly.manhnt.datn_md09.Models.ProductSizeColor.ProductSizeColorResponse;
 import poly.manhnt.datn_md09.api.ApiService;
 import poly.manhnt.datn_md09.api.RetrofitClient;
 import retrofit2.Call;
@@ -43,31 +44,86 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
             @Override
             public void onFailure(Call<ProductDetailResponse> call, Throwable t) {
 
-                view.onGetProductFail(new Exception("Fail: " + Objects.requireNonNull(t.getCause()) + "\t" + t.getMessage()));
+                view.onGetProductFail(new Exception("Fail: " + "\t" + t.getMessage()));
             }
         });
     }
 
     @Override
     public void getComment(String productId) {
-        RetrofitClient.getInstance().create(ApiService.class).getProductComment(productId).enqueue(new Callback<List<ProductComment>>() {
-            @Override
-            public void onResponse(Call<List<ProductComment>> call, Response<List<ProductComment>> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        view.onGetCommentSuccess(response.body());
-                    } else {
-                        view.onGetCommentFail(new Exception("No product comment detail found!"));
-                    }
-                } else {
-                    view.onGetCommentFail(new Exception("Get fail! Status code: " + response.code()));
-                }
-            }
+        try {
+            RetrofitClient.getInstance().create(ApiService.class).getProductComment(productId).enqueue(new Callback<List<ProductComment>>() {
 
-            @Override
-            public void onFailure(Call<List<ProductComment>> call, Throwable t) {
-                view.onGetCommentFail(new Exception("Fail: " + Objects.requireNonNull(t.getCause()) + "\t" + t.getMessage()));
-            }
-        });
+                @Override
+                public void onResponse(Call<List<ProductComment>> call, Response<List<ProductComment>> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            view.onGetCommentSuccess(response.body());
+                        } else {
+                            view.onGetCommentFail(new Exception("No product comment detail found!"));
+                        }
+                    } else {
+                        view.onGetCommentFail(new Exception("Get fail! Status code: " + response.code()));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ProductComment>> call, Throwable t) {
+                    view.onGetCommentFail(new Exception("Fail: " + "\t" + t.getMessage()));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            view.onGetCommentFail(e);
+        }
+
+    }
+
+    @Override
+    public void addToCart(String uid, String sizeColorId) {
+        try {
+            RetrofitClient.getInstance().create(ApiService.class).addCart(uid, sizeColorId).enqueue(new Callback<MessageResponse>() {
+                @Override
+                public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                    if (response.isSuccessful()) {
+                        view.onAddToCartSuccess();
+                    } else {
+                        view.onAddToCartFail(new Exception("add to cart fail"));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MessageResponse> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+            view.onAddToCartFail(e);
+        }
+    }
+
+    @Override
+    public void getProductSizeColor(String productId) {
+        try {
+            RetrofitClient.getInstance().create(ApiService.class).getProductSizeColor(productId).enqueue(new Callback<ProductSizeColorResponse>() {
+                @Override
+                public void onResponse(Call<ProductSizeColorResponse> call, Response<ProductSizeColorResponse> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            view.onGetProductSizeColorSuccess(response.body().productSizeColors);
+                        }
+                    } else {
+                        view.onGetCommentFail(new Exception("Get fail! Status code: " + response.code()));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProductSizeColorResponse> call, Throwable t) {
+                    view.onGetCommentFail(new Exception("Fail: " + "\t" + t.getMessage()));
+                }
+            });
+        } catch (Exception e) {
+            view.onGetProductSizeColorFail(e);
+        }
     }
 }

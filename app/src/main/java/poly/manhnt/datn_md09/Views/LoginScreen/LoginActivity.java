@@ -4,15 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
-
-import java.util.Objects;
 
 import poly.manhnt.datn_md09.DataManager;
 import poly.manhnt.datn_md09.Models.model_login.LoginRequest;
@@ -68,8 +64,11 @@ public class LoginActivity extends AppCompatActivity {
         //TODO MinhNTn fake login - xoa sau
         navigateHomeScreen();
 
-        String username = Objects.requireNonNull(edtUsername.getText()).toString().trim();
-        String password = Objects.requireNonNull(edtPassword.getText()).toString().trim();
+//        String username = Objects.requireNonNull(edtUsername.getText()).toString().trim();
+//        String password = Objects.requireNonNull(edtPassword.getText()).toString().trim();
+
+          String username = "md09";
+          String password = "md09";
 
         RetrofitClient.getInstance().create(ApiService.class).loginUser(new LoginRequest(username, password)).enqueue(new Callback<LoginResponse>() {
             @Override
@@ -87,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        navigateHomeScreen();
     }
 
     private void navigateHomeScreen() {

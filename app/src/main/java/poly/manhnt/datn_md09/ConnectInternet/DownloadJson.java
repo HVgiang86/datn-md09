@@ -19,33 +19,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-
 public class DownloadJson extends AsyncTask<String, Void, String> {
     String duongdan;
     List<HashMap<String, String>> attrs;
     StringBuilder dulieu;
     boolean method = true;
-    public  DownloadJson (String duongdan){
+
+    public DownloadJson(String duongdan) {
         this.duongdan = duongdan;
         method = true;
     }
-    public DownloadJson(String duongdan, List<HashMap<String, String>> attrs){
+
+    public DownloadJson(String duongdan, List<HashMap<String, String>> attrs) {
         this.duongdan = duongdan;
         this.attrs = attrs;
         method = false;
 
     }
+
     @Override
     protected String doInBackground(String... strings) {
         String data = "";
         try {
             URL url = new URL(duongdan);
+            Log.d("HEHE", url.toString());
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
-            if(!method){
+
+            if (!method) {
                 data = methodPost(httpURLConnection);
-            }else {
+            } else {
                 data = methodGet(httpURLConnection);
             }
 
@@ -56,7 +59,8 @@ public class DownloadJson extends AsyncTask<String, Void, String> {
         }
         return data;
     }
-    private String methodGet(HttpURLConnection httpURLConnection){
+
+    private String methodGet(HttpURLConnection httpURLConnection) {
         String data = "";
         InputStream inputStream = null;
         try {
@@ -66,7 +70,7 @@ public class DownloadJson extends AsyncTask<String, Void, String> {
             BufferedReader bufferedReader = new BufferedReader(reader);
             dulieu = new StringBuilder();
             String line = "";
-            while ((line = bufferedReader.readLine()) !=null){
+            while ((line = bufferedReader.readLine()) != null) {
                 dulieu.append(line);
             }
             data = dulieu.toString();
@@ -74,11 +78,12 @@ public class DownloadJson extends AsyncTask<String, Void, String> {
             reader.close();
             inputStream.close();
         } catch (IOException e) {
-                throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
         return data;
     }
-    private String methodPost(HttpURLConnection httpURLConnection){
+
+    private String methodPost(HttpURLConnection httpURLConnection) {
         String data = "";
         String key = "";
         String value = "";
@@ -88,8 +93,8 @@ public class DownloadJson extends AsyncTask<String, Void, String> {
             httpURLConnection.setDoInput(true);
             Uri.Builder builder = new Uri.Builder();
             int count = attrs.size();
-            for (int i=0; i<count; i++){
-                for(Map.Entry<String, String> values: attrs.get(i).entrySet()) {
+            for (int i = 0; i < count; i++) {
+                for (Map.Entry<String, String> values : attrs.get(i).entrySet()) {
                     key = values.getKey();
                     value = values.getValue();
                 }

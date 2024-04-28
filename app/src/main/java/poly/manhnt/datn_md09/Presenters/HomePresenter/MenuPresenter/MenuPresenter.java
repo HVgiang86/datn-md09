@@ -1,5 +1,7 @@
 package poly.manhnt.datn_md09.Presenters.HomePresenter.MenuPresenter;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,11 +12,13 @@ import poly.manhnt.datn_md09.Models.HomeModel.MenuModel.MenuModel;
 import poly.manhnt.datn_md09.Models.Objects.LoaiSanPham;
 import poly.manhnt.datn_md09.Views.HomeScreen.MenuView;
 
-public class MenuPresenter implements IPresenterMenu{
+public class MenuPresenter implements IPresenterMenu {
     MenuView menuView;
-    public MenuPresenter(MenuView menuView){
+
+    public MenuPresenter(MenuView menuView) {
         this.menuView = menuView;
     }
+
     @Override
     public void LayDanhSachMenu() {
         List<LoaiSanPham> loaiSanPhamList;
@@ -28,7 +32,7 @@ public class MenuPresenter implements IPresenterMenu{
         //Call data = POST
         String duongdan = "http://192.168.1.105/serverFmodel/loaisanpham.php";
         HashMap<String, String> hsMaLoaiCha = new HashMap<>();
-        hsMaLoaiCha.put("maloaicha","0");
+        hsMaLoaiCha.put("maloaicha", "0");
         attrs.add(hsMaLoaiCha);
         DownloadJson downloadJson = new DownloadJson(duongdan, attrs);
         //End POST
@@ -37,6 +41,7 @@ public class MenuPresenter implements IPresenterMenu{
 
         try {
             dataJson = downloadJson.get();
+            Log.d("HEHE", dataJson);
             MenuModel menuModel = new MenuModel();
             loaiSanPhamList = menuModel.parsetJSONmenu(dataJson);
             menuView.HienThiDanhSachMenu(loaiSanPhamList);

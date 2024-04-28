@@ -109,7 +109,6 @@
                 android:text="Acount"
                 android:textSize="12dp"
                 android:drawableTop="@drawable/ic_person"/>
-
         </FrameLayout>
     </FrameLayout>
     <ExpandableListView

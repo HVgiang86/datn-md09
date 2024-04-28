@@ -30,7 +30,9 @@ import java.util.List;
 import poly.manhnt.datn_md09.Adapters.NoiBatAdapter;
 import poly.manhnt.datn_md09.Adapters.ViewPagerAdapter;
 import poly.manhnt.datn_md09.Models.Objects.ILoadMore;
+import poly.manhnt.datn_md09.Models.Objects.LoaiSanPham;
 import poly.manhnt.datn_md09.Models.ProductResponse;
+import poly.manhnt.datn_md09.Presenters.HomePresenter.MenuPresenter.MenuPresenter;
 import poly.manhnt.datn_md09.R;
 import poly.manhnt.datn_md09.Views.CartScreen.CartActivity;
 import poly.manhnt.datn_md09.Views.DetailScreen.DetailActivity;
@@ -40,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnProductClickListener {
+public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnProductClickListener, MenuView {
     Toolbar toolbar;
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -54,6 +56,8 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     private int currentPosition = 0;
     private List<ProductResponse> productResponseList;
     private final Handler handler = new Handler(Looper.getMainLooper());
+
+    private MenuPresenter menuPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,9 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
 
         //TODO: MinhNTn fake data
         fakeDataProduct();
+
+//        menuPresenter = new MenuPresenter(this);
+//        menuPresenter.LayDanhSachMenu();
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
         noiBatAdapter = new NoiBatAdapter(this, productResponseList);
@@ -199,4 +206,9 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     }
 
     public static String EXTRA_PRODUCT_ID = "productId";
+
+    @Override
+    public void HienThiDanhSachMenu(List<LoaiSanPham> loaiSanPhamList) {
+        //TODO Implement
+    }
 }
