@@ -1,64 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.LoginScreen.LoginActivity"
-    android:background="@color/gray">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarNotifi"
+    android:background="@color/gray"
+    tools:context=".Views.LoginScreen.LoginActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarNotifi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
-            <LinearLayout
+            android:gravity="center_vertical">
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Thông báo"
-                    android:textColor="@color/black"
-                    android:textSize="25dp" />
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Thông báo"
+                android:textColor="@color/black"
+                android:textSize="25dp" />
+
+            <ImageButton
+                android:id="@+id/button_mark_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_mark_read" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerNotifi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="59dp"
-       />
+        android:layout_marginTop="59dp" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:layout_gravity="bottom"
+        android:background="@color/white"
         android:padding="10dp">
+
         <TextView
+            android:id="@+id/btn_home_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableTop="@drawable/ic_home"
             android:text="Home"
-            android:textSize="12dp"
-            android:drawableTop="@drawable/ic_home"/>
+            android:textSize="12dp" />
+
         <TextView
+            android:id="@+id/btn_notification_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:drawableTop="@drawable/ic_notifications"
+            android:drawableTint="@color/blue1"
             android:text="Thông báo"
-            android:textSize="12dp"
-            android:drawableTop="@drawable/ic_notifications"/>
+            android:textColor="@color/blue1"
+            android:textSize="12dp" />
+
         <TextView
-            android:layout_gravity="end"
+            android:id="@+id/btn_account_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:drawableTop="@drawable/ic_person"
             android:text="Acount"
-            android:textSize="12dp"
-            android:drawableTop="@drawable/ic_person"/>
+            android:textSize="12dp" />
 
     </FrameLayout>
 

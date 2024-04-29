@@ -44,8 +44,10 @@ import poly.manhnt.datn_md09.Presenters.HomePresenter.MenuPresenter.MenuPresente
 import poly.manhnt.datn_md09.Presenters.HomePresenter.ProductPresent.ProductContract;
 import poly.manhnt.datn_md09.Presenters.HomePresenter.ProductPresent.ProductPresenter;
 import poly.manhnt.datn_md09.R;
+import poly.manhnt.datn_md09.Views.AcountScreen.AcountActivity;
 import poly.manhnt.datn_md09.Views.CartScreen.CartActivity;
 import poly.manhnt.datn_md09.Views.DetailScreen.DetailActivity;
+import poly.manhnt.datn_md09.Views.NotifiScreen.NotifiActivity;
 import poly.manhnt.datn_md09.databinding.ActivityHomeBinding;
 
 public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnProductClickListener, MenuView, ProductContract.View {
@@ -84,6 +86,13 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         scrollView = findViewById(R.id.nestedScrollHome);
         recyclerView = findViewById(R.id.recyclerNoiBat);
         productResponseList = new ArrayList<>();
+
+        mBinding.btnHomeNotifi.setOnClickListener(v -> {
+            switchScreen(NotifiActivity.class);
+        });
+        mBinding.btnHomeAcount.setOnClickListener(v -> {
+            switchScreen(AcountActivity.class);
+        });
 
         //TODO: MinhNTn fake data
         fakeDataProduct();
@@ -194,6 +203,13 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         });
     }
 
+    private <T> void switchScreen(Class<T> tClass) {
+        Intent intent = new Intent(this, tClass);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
     public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
@@ -227,7 +243,7 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
 
     private void initData() {
         menuPresenter.getCategories();
-        productPresenter.getProductPage(1);
+        productPresenter.getProductPage(3);
     }
 
     @Override

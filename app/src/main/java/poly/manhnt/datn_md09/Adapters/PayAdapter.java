@@ -26,7 +26,7 @@ public class PayAdapter extends RecyclerView.Adapter<PayAdapter.ViewHolder> {
         CardView cardView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.notifi);
+            textView = itemView.findViewById(R.id.title);
         }
     }
     @NonNull

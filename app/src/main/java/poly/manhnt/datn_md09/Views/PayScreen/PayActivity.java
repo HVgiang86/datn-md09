@@ -29,7 +29,7 @@ public class PayActivity extends AppCompatActivity {
             list.add(ten);
         }
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false );
-        notifiAdapter = new NotifiAdapter(this, list);
+//        notifiAdapter = new NotifiAdapter(this, list);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(notifiAdapter);
         notifiAdapter.notifyDataSetChanged();
