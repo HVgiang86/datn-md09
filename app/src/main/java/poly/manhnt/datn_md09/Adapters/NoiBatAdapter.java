@@ -1,6 +1,7 @@
 package poly.manhnt.datn_md09.Adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class NoiBatAdapter extends RecyclerView.Adapter<NoiBatAdapter.ViewHolder
 
     public void updateData(List<ProductResponse> list) {
         this.list = list;
+        calculateFinalPrice();
         notifyDataSetChanged();
     }
 
@@ -58,7 +60,21 @@ public class NoiBatAdapter extends RecyclerView.Adapter<NoiBatAdapter.ViewHolder
         ProductResponse productResponse = list.get(position);
         holder.textView.setText(productResponse.name);
 
-        holder.tvPrice.setText(productResponse.price + "$");
+        CustomRecyclerNoiBatBinding binding = holder.binding;
+
+        //Price, discount and original price
+        if (productResponse.discount == null) {
+            //no discount
+
+            binding.textOriginPrice.setVisibility(View.INVISIBLE);
+            binding.tvPrice.setText("" + productResponse.price);
+        } else {
+            binding.textOriginPrice.setVisibility(View.VISIBLE);
+            binding.tvPrice.setText("VNĐ " + productResponse.discount);
+            binding.textOriginPrice.setText("VNĐ " + productResponse.price);
+            binding.textOriginPrice.setPaintFlags(binding.textOriginPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+
 
         List<ProductQuantity> quantities = DataManager.getInstance().productQuantityList;
 
@@ -94,6 +110,13 @@ public class NoiBatAdapter extends RecyclerView.Adapter<NoiBatAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    private void calculateFinalPrice() {
+        for (ProductResponse pr : list) {
+            if (pr.discount == null) pr.finalPrice = pr.price;
+            else pr.finalPrice = pr.discount;
+        }
     }
 
     public void sortPriceAsc() {

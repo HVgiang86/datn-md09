@@ -149,7 +149,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="6dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/filter_container" />
+                    app:layout_constraintTop_toBottomOf="@id/filter_container"
+                    tools:listitem="@layout/custom_recycler_noi_bat" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -216,11 +217,11 @@
                 android:id="@+id/btn_home_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_home"
-                android:textColor="@color/blue1"
-                android:drawableTint="@color/blue1"
                 android:clickable="false"
+                android:drawableTop="@drawable/ic_home"
+                android:drawableTint="@color/blue1"
                 android:text="Home"
+                android:textColor="@color/blue1"
                 android:textSize="12dp" />
 
             <TextView

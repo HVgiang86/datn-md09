@@ -32,7 +32,7 @@ public interface ProductDetailContract {
 
         void getComment(String productId);
 
-        void addToCart(String productId, String sizeColorId);
+        void addToCart(String productId, String sizeColorId, int quantity);
 
         void getProductSizeColor(String productId);
     }

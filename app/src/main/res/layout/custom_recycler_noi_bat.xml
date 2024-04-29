@@ -1,86 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    android:id="@+id/cardviewNoiBat"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardviewNoiBat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:ignore="MissingConstraints"
-    app:cardCornerRadius="1dp"
     android:layout_marginTop="6dp"
     android:layout_marginRight="6dp"
-    android:background="@color/white">
+    android:background="@color/white"
+    app:cardCornerRadius="1dp"
+    tools:ignore="MissingConstraints">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <ImageView
             android:id="@+id/imvBackground"
             android:layout_width="match_parent"
             android:layout_height="185dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/backgroundplashscreen"/>
+            android:src="@drawable/backgroundplashscreen" />
+
         <FrameLayout
             android:id="@+id/container_sold_out"
             android:layout_width="match_parent"
             android:layout_height="185dp"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Hết Hàng!"
-                android:textSize="32sp"
-                android:textColor="@color/white"
                 android:background="@drawable/sold_out_mask_bg"
                 android:elevation="2dp"
                 android:gravity="center"
-                />
+                android:text="Hết Hàng!"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
 
             <ImageView
                 android:id="@+id/imvBackground1"
                 android:layout_width="match_parent"
                 android:layout_height="185dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/backgroundplashscreen"/>
+                android:src="@drawable/backgroundplashscreen" />
         </FrameLayout>
+
         <TextView
             android:id="@+id/txtTieuDeNoiBat"
             android:layout_width="match_parent"
-            android:textColor="@color/black"
-            android:ellipsize="end"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:ellipsize="end"
             android:maxLines="2"
-            android:textSize="13dp"
             android:padding="8dp"
-            android:text="Tieu đề 1"/>
+            android:text="Tieu đề 1"
+            android:textColor="@color/black"
+            android:textSize="13dp" />
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_margin="8dp"
-            >
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tvPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/backgroundplashscreen"
                 android:text="đ350.000"
                 android:textColor="@color/blue1"
-                android:textSize="16dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/backgroundplashscreen"/>
+                android:textSize="16dp" />
+
             <TextView
                 android:id="@+id/txt2"
                 android:layout_width="wrap_content"
-                android:layout_gravity="end|bottom"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
                 android:maxLines="2"
-                android:textSize="11dp"
-                android:text="Đã bán 10,9k"/>
+                android:text="Đã bán 10,9k"
+                android:textSize="11dp" />
 
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/text_origin_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="đ350.000"
+            android:textColor="@color/gray2"
+            android:textSize="13dp"
+            android:textStyle="italic" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

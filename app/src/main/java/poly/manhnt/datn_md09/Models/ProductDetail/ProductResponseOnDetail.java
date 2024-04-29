@@ -12,7 +12,7 @@ public class ProductResponseOnDetail {
     public ArrayList<String> image;
     public String category_id;
     public int price;
-    public Object discount;
+    public Integer discount;
     public String createdAt;
     public int __v;
     public String updatedAt;

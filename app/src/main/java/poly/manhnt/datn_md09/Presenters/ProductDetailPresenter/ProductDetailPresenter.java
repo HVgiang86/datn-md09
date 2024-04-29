@@ -1,5 +1,6 @@
 package poly.manhnt.datn_md09.Presenters.ProductDetailPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import poly.manhnt.datn_md09.Models.MessageResponse;
@@ -7,7 +8,9 @@ import poly.manhnt.datn_md09.Models.ProductComment.ProductComment;
 import poly.manhnt.datn_md09.Models.ProductDetail.ProductDetailResponse;
 import poly.manhnt.datn_md09.Models.ProductDetail.ProductResponseOnDetail;
 import poly.manhnt.datn_md09.Models.ProductResponse;
+import poly.manhnt.datn_md09.Models.ProductSizeColor.ProductSizeColor;
 import poly.manhnt.datn_md09.Models.ProductSizeColor.ProductSizeColorResponse;
+import poly.manhnt.datn_md09.Models.cart.CartRequest;
 import poly.manhnt.datn_md09.api.ApiService;
 import poly.manhnt.datn_md09.api.RetrofitClient;
 import retrofit2.Call;
@@ -80,9 +83,9 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
     }
 
     @Override
-    public void addToCart(String uid, String sizeColorId) {
+    public void addToCart(String uid, String sizeColorId, int quantity) {
         try {
-            RetrofitClient.getInstance().create(ApiService.class).addCart(uid, sizeColorId).enqueue(new Callback<MessageResponse>() {
+            RetrofitClient.getInstance().create(ApiService.class).addCart(uid, sizeColorId, new CartRequest(quantity)).enqueue(new Callback<MessageResponse>() {
                 @Override
                 public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                     if (response.isSuccessful()) {
@@ -94,7 +97,7 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
 
                 @Override
                 public void onFailure(Call<MessageResponse> call, Throwable t) {
-
+                    view.onAddToCartFail(new Exception("add to cart fail: " + t.getMessage()));
                 }
             });
         } catch (Exception e) {
@@ -110,8 +113,15 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
                 public void onResponse(Call<ProductSizeColorResponse> call, Response<ProductSizeColorResponse> response) {
                     if (response.isSuccessful()) {
                         if (response.body() != null) {
-                            view.onGetProductSizeColorSuccess(response.body().productSizeColors);
+                            List<ProductSizeColor> list = new ArrayList<>();
+                            for (ProductSizeColor psc : response.body().productSizeColors) {
+                                if (psc.quantity > 0) {
+                                    list.add(psc);
+                                }
+                            }
 
+                            if (!list.isEmpty()) view.onGetProductSizeColorSuccess(list);
+                            else view.onGetProductSizeColorFail(new Exception("Sold out!"));
                         }
                     } else {
                         view.onGetCommentFail(new Exception("Get fail! Status code: " + response.code()));

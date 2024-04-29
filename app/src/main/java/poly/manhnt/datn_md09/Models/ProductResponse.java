@@ -9,12 +9,14 @@ public class ProductResponse {
     public ArrayList<String> image;
     public ProductCategory category_id;
     public int price;
-    public Object discount;
+    public Integer discount;
+
+    public transient int finalPrice;
     public String createdAt;
     public int __v;
 
     public int getPrice() {
-        return price;
+        return finalPrice;
     }
 
 }

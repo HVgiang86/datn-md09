@@ -356,6 +356,7 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     @Override
     public void onGetProductPageSuccess(int page, List<ProductResponse> productResponseList) {
         this.productResponseList = productResponseList;
+
         noiBatAdapter.updateData(productResponseList);
 
         for (ProductResponse pr : productResponseList) {

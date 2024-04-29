@@ -3,6 +3,7 @@ package poly.manhnt.datn_md09.Views.DetailScreen;
 import static poly.manhnt.datn_md09.Views.HomeScreen.HomeActivity.EXTRA_PRODUCT_ID;
 
 import android.annotation.SuppressLint;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,17 +37,17 @@ import poly.manhnt.datn_md09.databinding.ActivityDetailBinding;
 public class DetailActivity extends AppCompatActivity implements ProductDetailContract.View {
     private final Handler handler = new Handler(Looper.getMainLooper());
     DanhGiaAdapter danhGiaAdapter;
+    private int quantity = 0;
     private boolean isGotSizeColorList = false;
     private List<ProductSizeColor> sizeColorList;
     private String selectedSize;
     private String selectedColor;
-    private ProductResponse mProduct;
     private ProductDetailPresenter presenter;
     private ActivityDetailBinding mBinding;
     private BottomSheetBehavior mSheetBehavior;
     private int currentPosition = 0;
-
     private AddToCartMode confirmCartMode;
+    private boolean canAddCart = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,8 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
         }
 
         mBinding.buttonAddCart.setOnClickListener(v -> {
-            if (isGotSizeColorList) mSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            if (isGotSizeColorList && canAddCart)
+                mSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             confirmCartMode = AddToCartMode.ADD_TO_CART;
         });
 
@@ -86,21 +88,49 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
 
         mSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
         mSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        updateQuantityText();
+        mBinding.buttonPlus.setOnClickListener(v -> {
+            quantity++;
+            updateQuantityText();
+        });
+        mBinding.buttonMinus.setOnClickListener(v -> {
+            quantity = quantity <= 1 ? 0 : quantity - 1;
+            updateQuantityText();
+        });
     }
+
+    @SuppressLint("SetTextI18n")
+    private void updateQuantityText() {
+        mBinding.textQuantity.setText("" + quantity);
+    }
+
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onGetProductSuccess(ProductResponse product) {
         Log.d("HAHA", "on get success");
-        mProduct = product;
         mBinding.textPrice.setText("VNĐ " + product.price);
         mBinding.textName.setText(product.name);
         mBinding.textDesc.setText(product.description);
 
         //View Pager
-        ImageViewPagerAdapter adapter = new ImageViewPagerAdapter(mProduct.image);
+        ImageViewPagerAdapter adapter = new ImageViewPagerAdapter(product.image);
         mBinding.viewPager.setAdapter(adapter);
-        startAutoScroll(mProduct.image.size());
+        startAutoScroll(product.image.size());
+
+        //Price, discount and original price
+        if (product.discount == null) {
+            //no discount
+
+            mBinding.textOriginPrice.setVisibility(View.INVISIBLE);
+            mBinding.textPrice.setText("" + product.price);
+        } else {
+            mBinding.textOriginPrice.setVisibility(View.VISIBLE);
+            mBinding.textPrice.setText("VNĐ " + product.discount);
+            mBinding.textOriginPrice.setText("VNĐ " + product.price);
+            mBinding.textOriginPrice.setPaintFlags(mBinding.textOriginPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
     }
 
     private void startAutoScroll(int itemCount) {
@@ -125,7 +155,7 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
     private void addToCart() {
         for (ProductSizeColor psc : sizeColorList) {
             if (psc.size.sizeName.equals(selectedSize) && psc.color.colorName.equals(selectedColor)) {
-                presenter.addToCart(DataManager.getInstance().getUserLogin.idUser, psc.sizeColorId);
+                presenter.addToCart(DataManager.getInstance().getUserLogin.idUser, psc.sizeColorId, quantity);
             }
         }
     }
@@ -174,6 +204,8 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
 
     @Override
     public void onGetProductSizeColorSuccess(List<ProductSizeColor> sizeColorList) {
+        canAddCart = true;
+        mBinding.textSoldOut.setVisibility(View.GONE);
         this.sizeColorList = sizeColorList;
         isGotSizeColorList = true;
         ArrayList<String> sizeList = new ArrayList();
@@ -226,8 +258,9 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
 
     @Override
     public void onGetProductSizeColorFail(Exception e) {
-        Toast.makeText(this, "Fail to get Product size and color", Toast.LENGTH_SHORT).show();
-        finish();
+        Toast.makeText(this, "Sản phẩm đã bán hết", Toast.LENGTH_SHORT).show();
+        canAddCart = false;
+        mBinding.textSoldOut.setVisibility(View.VISIBLE);
     }
 
     private enum AddToCartMode {

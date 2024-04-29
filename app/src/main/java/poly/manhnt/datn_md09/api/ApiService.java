@@ -46,7 +46,7 @@ public interface ApiService {
     Call<ProductSizeColorResponse> getProductSizeColor(@Path("id") String productId);
 
     @POST("addCart/{uid}/{size_color_id}")
-    Call<MessageResponse> addCart(@Path("uid") String uid, @Path("size_color_id") String sizeColorId);
+    Call<MessageResponse> addCart(@Path("uid") String uid, @Path("size_color_id") String sizeColorId, @Body CartRequest cartRequest);
 
     @GET("categorys")
     Call<CategoryIdResponse> getCategories();
