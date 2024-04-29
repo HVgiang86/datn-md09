@@ -201,6 +201,7 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
             }
             return false;
         });
+
     }
 
     private <T> void switchScreen(Class<T> tClass) {
@@ -249,16 +250,18 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.homemenu, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
+        System.out.println("Click menu");
+//        if (drawerToggle.onOptionsItemSelected(item)) {
+//            return true;
+//        }
 
         if (item.getItemId() == R.id.itCart) {
+            System.out.println("Click cart");
             startActivity(new Intent(HomeActivity.this, CartActivity.class));
         }
 
@@ -310,6 +313,7 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     public void onGetCategoriesSuccess(List<ProductCategory> categories) {
         initFilterBar(categories);
         System.out.println("Init filterbar");
+        scrollView.scrollTo(0, 0);
     }
 
     public void initFilterBar(List<ProductCategory> categories) {

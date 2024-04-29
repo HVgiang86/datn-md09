@@ -3,14 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/itCart"
-        android:title="Cart"
         android:icon="@drawable/ic_cart"
-        app:showAsAction="ifRoom"
-        app:actionLayout="@layout/custom_item_cart"/>
+        android:title="Cart"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/itChat"
-        android:title="Chat"
-        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_chat"
-        app:actionLayout="@layout/custom_item_chat"/>
+        android:title="Chat"
+        app:showAsAction="ifRoom" />
 </menu>

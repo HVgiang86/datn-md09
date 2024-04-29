@@ -2,20 +2,24 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     android:paddingRight="10dp">
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_cart"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp" />
+        android:layout_marginRight="5dp"
+        android:src="@drawable/ic_cart" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10dp"
+        android:layout_gravity="right"
+        android:background="@drawable/circle"
+        android:gravity="center"
         android:text="50"
         android:textColor="@color/white"
-        android:gravity="center"
-        android:layout_gravity="right"
-        android:background="@drawable/circle"/>
+        android:textSize="10dp" />
 </FrameLayout>

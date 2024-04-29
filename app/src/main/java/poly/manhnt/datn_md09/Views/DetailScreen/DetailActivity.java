@@ -32,22 +32,17 @@ import poly.manhnt.datn_md09.Presenters.ProductDetailPresenter.ProductDetailCont
 import poly.manhnt.datn_md09.Presenters.ProductDetailPresenter.ProductDetailPresenter;
 import poly.manhnt.datn_md09.R;
 import poly.manhnt.datn_md09.databinding.ActivityDetailBinding;
-import poly.manhnt.datn_md09.databinding.ItemBottomSheetAddCartBinding;
 
 public class DetailActivity extends AppCompatActivity implements ProductDetailContract.View {
     private final Handler handler = new Handler(Looper.getMainLooper());
     DanhGiaAdapter danhGiaAdapter;
-    private boolean isColorSelected = false;
-    private boolean isSizeSelected = false;
     private boolean isGotSizeColorList = false;
     private List<ProductSizeColor> sizeColorList;
     private String selectedSize;
     private String selectedColor;
     private ProductResponse mProduct;
     private ProductDetailPresenter presenter;
-    private String mProductId;
     private ActivityDetailBinding mBinding;
-    private ItemBottomSheetAddCartBinding mBottomSheetBinding;
     private BottomSheetBehavior mSheetBehavior;
     private int currentPosition = 0;
 
@@ -65,7 +60,6 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
 
         String productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
         if (productId != null && !productId.isEmpty()) {
-            mProductId = productId;
             presenter.getProduct(productId);
             presenter.getComment(productId);
             //get Product Detail
@@ -194,7 +188,6 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
         mBinding.spinnerSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                isSizeSelected = true;
                 selectedSize = sizeList.get(position);
                 ArrayList<String> colorList = new ArrayList();
                 for (ProductSizeColor psc : sizeColorList) {
@@ -208,7 +201,6 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 mBinding.spinnerColor.setAdapter(null);
-                isSizeSelected = false;
             }
         });
     }
@@ -223,13 +215,11 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
         mBinding.spinnerColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                isColorSelected = true;
                 selectedColor = colors.get(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                isColorSelected = false;
             }
         });
     }

@@ -2,7 +2,6 @@ package poly.manhnt.datn_md09.api;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import poly.manhnt.datn_md09.Models.CategoryIdResponse;
 import poly.manhnt.datn_md09.Models.MessageResponse;
 import poly.manhnt.datn_md09.Models.ProductComment.ProductComment;
@@ -11,13 +10,16 @@ import poly.manhnt.datn_md09.Models.ProductResponse;
 import poly.manhnt.datn_md09.Models.ProductSearch.ProductSearchResponse;
 import poly.manhnt.datn_md09.Models.ProductSizeColor.ProductSizeColorResponse;
 import poly.manhnt.datn_md09.Models.UserNotification.UserNotification;
+import poly.manhnt.datn_md09.Models.cart.CartRequest;
+import poly.manhnt.datn_md09.Models.cart.CartResponse;
+import poly.manhnt.datn_md09.Models.discount.DiscountResponse;
 import poly.manhnt.datn_md09.Models.model_login.LoginRequest;
 import poly.manhnt.datn_md09.Models.model_login.LoginResponse;
 import poly.manhnt.datn_md09.Models.model_register.RegisterRequest;
 import poly.manhnt.datn_md09.Models.model_register.RegisterResponse;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -57,5 +59,17 @@ public interface ApiService {
 
     @GET("notification-read/{notificationId}")
     Call<Void> markReadNotification(@Path("notificationId") String notificationId);
+
+    @GET("getListCart/{uid}")
+    Call<CartResponse> getCartList(@Path("uid") String uid);
+
+    @POST("updateCart/{uid}/{cartId}")
+    Call<Void> updateCartItem(@Path("uid") String uid, @Path("cartId") String cartId, @Body CartRequest cartRequest);
+
+    @DELETE("deletecart/{cartId}")
+    Call<Void> deleteCartItem(@Path("cartId") String cartId);
+
+    @GET("discount/{uid}")
+    Call<DiscountResponse> getUserDiscount(@Path("uid") String uid);
 
 }

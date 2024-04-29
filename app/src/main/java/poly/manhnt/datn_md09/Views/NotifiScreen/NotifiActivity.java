@@ -47,6 +47,7 @@ public class NotifiActivity extends AppCompatActivity implements UserNotificatio
             for (UserNotification notification : notifications) {
                 presenter.markNotificationRead(notification.id);
             }
+            Toast.makeText(this, "Mark all notification as read", Toast.LENGTH_SHORT).show();
         });
     }
 
