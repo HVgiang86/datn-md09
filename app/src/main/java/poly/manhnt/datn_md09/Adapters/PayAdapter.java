@@ -1,10 +1,9 @@
 package poly.manhnt.datn_md09.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -12,40 +11,68 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import poly.manhnt.datn_md09.R;
+import poly.manhnt.datn_md09.Models.cart.Cart;
+import poly.manhnt.datn_md09.databinding.ItemPaymentCartBinding;
 
 public class PayAdapter extends RecyclerView.Adapter<PayAdapter.ViewHolder> {
     Context context;
-    List<String> stringList;
-    public PayAdapter(Context context, List<String> stringList){
+    List<Cart> carts;
+
+    private OnItemClickListener listener;
+
+    public PayAdapter(Context context) {
         this.context = context;
-        this.stringList = stringList;
     }
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
-        CardView cardView;
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textView = itemView.findViewById(R.id.title);
-        }
+
+    public void updateData(List<Cart> carts) {
+        this.carts = carts;
+        notifyDataSetChanged();
     }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.custom_cardview_pay, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        ItemPaymentCartBinding binding = ItemPaymentCartBinding.inflate(layoutInflater, parent, false);
+        return new ViewHolder(binding);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.textView.setText(stringList.get(position));
+        ItemPaymentCartBinding binding = holder.binding;
+        Cart cart = carts.get(position);
+        binding.textName.setText("cart.sizeColor.product.name");
+        binding.textPrice.setText("" + cart.sizeColor.product.getFinalPrice());
+        binding.textQuantity.setText("" + cart.quantity);
+        String color = cart.sizeColor.color.colorName;
+        String size = cart.sizeColor.size.sizeName;
+        binding.textSizeColor.setText(size + ", " + color);
+
+        holder.itemView.setOnClickListener(v -> listener.onItemClickListener(cart.sizeColor.product._id));
     }
 
     @Override
     public int getItemCount() {
-        return stringList.size();
+        return carts == null ? 0 : carts.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClickListener(String productId);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ItemPaymentCartBinding binding;
+        CardView cardView;
+
+        public ViewHolder(@NonNull ItemPaymentCartBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
     }
 }
 

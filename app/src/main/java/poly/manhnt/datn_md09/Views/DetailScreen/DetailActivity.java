@@ -263,7 +263,7 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
         mBinding.textSoldOut.setVisibility(View.VISIBLE);
     }
 
-    private enum AddToCartMode {
+    public enum AddToCartMode {
         ADD_TO_CART, BUY_NOW
     }
 }

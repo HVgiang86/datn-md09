@@ -9,6 +9,10 @@ import poly.manhnt.datn_md09.Models.ProductDetail.ProductDetailResponse;
 import poly.manhnt.datn_md09.Models.ProductResponse;
 import poly.manhnt.datn_md09.Models.ProductSearch.ProductSearchResponse;
 import poly.manhnt.datn_md09.Models.ProductSizeColor.ProductSizeColorResponse;
+import poly.manhnt.datn_md09.Models.UserAddress.AddAddressRequest;
+import poly.manhnt.datn_md09.Models.UserAddress.AddressResponse;
+import poly.manhnt.datn_md09.Models.UserAddress.SetAddressRequest;
+import poly.manhnt.datn_md09.Models.UserAddress.UserAddress;
 import poly.manhnt.datn_md09.Models.UserNotification.UserNotification;
 import poly.manhnt.datn_md09.Models.cart.CartRequest;
 import poly.manhnt.datn_md09.Models.cart.CartResponse;
@@ -17,6 +21,8 @@ import poly.manhnt.datn_md09.Models.model_login.LoginRequest;
 import poly.manhnt.datn_md09.Models.model_login.LoginResponse;
 import poly.manhnt.datn_md09.Models.model_register.RegisterRequest;
 import poly.manhnt.datn_md09.Models.model_register.RegisterResponse;
+import poly.manhnt.datn_md09.Models.payment.PaymentRequest;
+import poly.manhnt.datn_md09.Models.payment.VnpResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -71,5 +77,23 @@ public interface ApiService {
 
     @GET("discount/{uid}")
     Call<DiscountResponse> getUserDiscount(@Path("uid") String uid);
+
+    @POST("order/create_payment_url/{uid}")
+    Call<VnpResponse> onlinePayment(@Path("uid") String uid, @Body PaymentRequest request);
+
+    @GET("get-address/{addressId}")
+    Call<AddressResponse> getAddressDetail(@Path("addressId") String addressId);
+
+    @GET("address/{uid}")
+    Call<List<UserAddress>> getAddressList(@Path("uid") String uid);
+
+    @POST("setaddress")
+    Call<Void> setAddress(@Body SetAddressRequest request);
+
+    @POST("address")
+    Call<Void> addAddress(@Body AddAddressRequest request);
+
+    @POST("addbill/{uid}")
+    Call<MessageResponse> addBill(@Path("uid") String uid, @Body PaymentRequest request);
 
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item android:drawable="@drawable/ic_show_group2" android:gravity="center_vertical|right" android:left="16dp"/>
+
+        </layer-list>
+    </item>
+</selector>

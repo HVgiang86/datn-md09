@@ -45,24 +45,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initEvents() {
-        tvLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loginUser();
-            }
-        });
+        tvLogin.setOnClickListener(view -> loginUser());
 
-        tvSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigateRegisterScreen();
-            }
-        });
+        tvSignUp.setOnClickListener(view -> navigateRegisterScreen());
     }
 
     private void loginUser() {
-        //TODO MinhNTn fake login - xoa sau
-        navigateHomeScreen();
 
 //        String username = Objects.requireNonNull(edtUsername.getText()).toString().trim();
 //        String password = Objects.requireNonNull(edtPassword.getText()).toString().trim();
@@ -86,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        navigateHomeScreen();
     }
 
     private void navigateHomeScreen() {

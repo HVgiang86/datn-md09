@@ -23,18 +23,22 @@ import poly.manhnt.datn_md09.Presenters.cart.CartContract;
 import poly.manhnt.datn_md09.Presenters.cart.CartPresenter;
 import poly.manhnt.datn_md09.Views.DetailScreen.DetailActivity;
 import poly.manhnt.datn_md09.Views.HomeScreen.HomeActivity;
+import poly.manhnt.datn_md09.Views.PayScreen.PayActivity;
 import poly.manhnt.datn_md09.databinding.ActivityCartBinding;
 
 public class CartActivity extends AppCompatActivity implements CartAdapter.OnItemInteractListener, CartContract.View, UserDiscountContract.View {
 
+    public static final String KEY_CARD_ID_ARRAY = "KEY_CARD_ID_ARRAY";
+    public static final String KEY_AMOUNT = "KEY_AMOUNT";
+    public static final String KEY_DISCOUNT_ID = "KEY_DISCOUNT_ID";
     private int discount = 0;
+    private String discountId;
     private ActivityCartBinding binding;
     private CartPresenter presenter;
     private UserDiscountPresenter discountPresenter;
     private int totalPrice;
     private int finalPrice = 0;
     private CartAdapter adapter;
-
     private List<UserDiscount> discountList = null;
 
     @Override
@@ -55,8 +59,19 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnIte
         binding.buttonAddMoreProduct.setOnClickListener(v -> finish());
         binding.buttonOpenChat.setOnClickListener(v -> {
         });
+        binding.buttonOrderConfirm.setOnClickListener(v -> {
+            doPayment();
+        });
     }
 
+    private void doPayment() {
+        Intent intent = new Intent(this, PayActivity.class);
+        intent.putExtra(KEY_AMOUNT, finalPrice);
+        intent.putExtra(KEY_DISCOUNT_ID, discountId);
+        String[] idCarts = adapter.getCartIdArray();
+        intent.putExtra(KEY_CARD_ID_ARRAY, idCarts);
+        startActivity(intent);
+    }
 
     private void initData() {
         presenter.getCartList(DataManager.getInstance().getUserLogin.idUser);
@@ -134,8 +149,11 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnIte
         binding.spinnerUserDiscount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == size) discount = 0;
-                else {
+                if (position == size) {
+                    discount = 0;
+                    discountId = "";
+                } else {
+                    discountId = discountList.get(position).id;
                     discount = discountList.get(position).discount;
                 }
                 updateTotalPriceText();

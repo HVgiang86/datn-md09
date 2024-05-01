@@ -9,10 +9,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CartPresenter implements CartContract.Presenter {
-    private final CartContract.View view;
+    private CartContract.View view = null;
+    private CartContract.PaymentView paymentView = null;
 
     public CartPresenter(CartContract.View view) {
         this.view = view;
+    }
+
+    public CartPresenter(CartContract.PaymentView paymentView) {
+        this.paymentView = paymentView;
     }
 
     @Override
@@ -22,21 +27,29 @@ public class CartPresenter implements CartContract.Presenter {
                 @Override
                 public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                     if (response.isSuccessful()) {
-                        view.onGetCartListSuccess(response.body().cartList);
+                        if (view != null) view.onGetCartListSuccess(response.body().cartList);
+                        if (paymentView != null)
+                            paymentView.onGetCartListSuccess(response.body().cartList);
                     } else {
-                        view.onGetCartFail(new Exception("Fail: " + response.message()));
+                        if (view != null)
+                            view.onGetCartFail(new Exception("Fail: " + response.message()));
+                        if (paymentView != null)
+                            paymentView.onGetCartFail(new Exception("Fail: " + response.message()));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<CartResponse> call, Throwable t) {
                     t.printStackTrace();
-                    view.onGetCartFail(new Exception("Fail: " + t.getMessage()));
+                    if (view != null) view.onGetCartFail(new Exception("Fail: " + t.getMessage()));
+                    if (paymentView != null)
+                        paymentView.onGetCartFail(new Exception("Fail: " + t.getMessage()));
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
-            view.onGetCartFail(e);
+            if (view != null) view.onGetCartFail(e);
+            if (paymentView != null) paymentView.onGetCartFail(e);
         }
     }
 

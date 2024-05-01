@@ -27,16 +27,20 @@ public class ProductPresenter implements ProductContract.Presenter {
                 public void onResponse(Call<List<ProductResponse>> call, Response<List<ProductResponse>> response) {
                     if (response.isSuccessful()) {
                         mView.onGetProductPageSuccess(page, response.body());
+                    } else {
+                        mView.onGetProductPageFail(page);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<List<ProductResponse>> call, Throwable t) {
                     t.printStackTrace();
+                    mView.onGetProductPageFail(page);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
+            mView.onGetProductPageFail(page);
         }
     }
 

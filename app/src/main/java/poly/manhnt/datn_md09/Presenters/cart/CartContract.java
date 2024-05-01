@@ -13,7 +13,12 @@ public interface CartContract {
         void onUpdateCartItemSuccess(String cartId, int quantity);
 
         void onUpdateCartFail(Exception e);
+    }
 
+    interface PaymentView{
+        void onGetCartListSuccess(List<Cart> carts);
+
+        void onGetCartFail(Exception e);
     }
 
     interface Presenter {

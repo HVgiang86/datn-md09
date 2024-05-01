@@ -15,6 +15,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Views.DeliveryMethodScreen.DeliveryMethodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.AddressChoiceScreen.AddressChoiceActivity"
+            android:exported="false" />
+        <activity
             android:name=".Views.AcountScreen.AcountActivity"
             android:exported="false" />
         <activity

@@ -5,12 +5,11 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitClient {
-
-    private static final String BASE_URL = "https://fff1-118-71-137-7.ngrok-free.app/api/";
+public class RetrofitOderClient {
+    private static final String BASE_URL = "https://fff1-118-71-137-7.ngrok-free.app/";
     private static Retrofit retrofit;
 
-    private RetrofitClient() {
+    private RetrofitOderClient() {
     }
 
     public static Retrofit getInstance() {
@@ -27,5 +26,4 @@ public class RetrofitClient {
         }
         return retrofit;
     }
-
 }

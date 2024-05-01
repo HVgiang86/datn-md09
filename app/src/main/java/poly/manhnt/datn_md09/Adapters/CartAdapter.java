@@ -149,6 +149,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         return carts.size();
     }
 
+    public String[] getCartIdArray() {
+        List<String> list = new ArrayList<>();
+        for (MyPair pair : carts) {
+            Cart cart = pair.first;
+            boolean isCheck = pair.second;
+
+            if (isCheck) list.add(cart._id);
+        }
+        return list.toArray(new String[0]);
+    }
+
     public interface OnItemInteractListener {
         void onQuantityMinus(String cartId, int afterQuantity);
 

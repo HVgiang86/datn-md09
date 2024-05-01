@@ -20,17 +20,13 @@ import android.widget.ExpandableListView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import poly.manhnt.datn_md09.Adapters.NoiBatAdapter;
 import poly.manhnt.datn_md09.Adapters.ViewPagerAdapter;
@@ -49,25 +45,23 @@ import poly.manhnt.datn_md09.Views.CartScreen.CartActivity;
 import poly.manhnt.datn_md09.Views.DetailScreen.DetailActivity;
 import poly.manhnt.datn_md09.Views.NotifiScreen.NotifiActivity;
 import poly.manhnt.datn_md09.databinding.ActivityHomeBinding;
+import poly.manhnt.datn_md09.utils.Utils;
 
 public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnProductClickListener, MenuView, ProductContract.View {
     public static String EXTRA_PRODUCT_ID = "productId";
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private final List<ProductResponse> displayList = new ArrayList();
-    Toolbar toolbar;
-    TabLayout tabLayout;
-    ViewPager viewPager;
+    private final List<ProductResponse> displayList = new ArrayList<>();
     ViewPagerAdapter viewPagerAdapter;
-    DrawerLayout drawerLayout;
     ActionBarDrawerToggle drawerToggle;
     ExpandableListView expandableListView;
-    NestedScrollView scrollView;
-    RecyclerView recyclerView;
     NoiBatAdapter noiBatAdapter;
+    int pageLimit = 4;
+    List<String> categoryNames = new ArrayList<>();
+    private int filterCategoryPosition = 0;
+    private int pageNumber = 1;
     private int currentPosition = 0;
-
     private PriceSortMode priceSortMode = PriceSortMode.UNSORTED;
-    private List<ProductResponse> productResponseList;
+    private List<ProductResponse> productResponseList = new ArrayList<>();
     private MenuPresenter menuPresenter;
     private ProductPresenter productPresenter;
     private ActivityHomeBinding mBinding;
@@ -75,17 +69,10 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mBinding = ActivityHomeBinding.inflate(getLayoutInflater());
-
         super.onCreate(savedInstanceState);
         setContentView(mBinding.getRoot());
-        toolbar = findViewById(R.id.toolbar);
-        tabLayout = findViewById(R.id.tabLayout);
-        viewPager = findViewById(R.id.viewPager);
-        drawerLayout = findViewById(R.id.drawerLayout);
-        expandableListView = findViewById(R.id.epMenu);
-        scrollView = findViewById(R.id.nestedScrollHome);
-        recyclerView = findViewById(R.id.recyclerNoiBat);
-        productResponseList = new ArrayList<>();
+
+        categoryNames.add("Tất cả");
 
         mBinding.btnHomeNotifi.setOnClickListener(v -> {
             switchScreen(NotifiActivity.class);
@@ -93,9 +80,6 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         mBinding.btnHomeAcount.setOnClickListener(v -> {
             switchScreen(AcountActivity.class);
         });
-
-        //TODO: MinhNTn fake data
-        fakeDataProduct();
 
         menuPresenter = new MenuPresenter(this);
         productPresenter = new ProductPresenter(this);
@@ -105,55 +89,58 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
         noiBatAdapter = new NoiBatAdapter(this, productResponseList);
         noiBatAdapter.setOnItemClickListener(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(noiBatAdapter);
-        recyclerView.addOnScrollListener(new ILoadMore(layoutManager));
+        mBinding.recyclerNoiBat.setLayoutManager(layoutManager);
+        mBinding.recyclerNoiBat.setAdapter(noiBatAdapter);
+        mBinding.recyclerNoiBat.addOnScrollListener(new ILoadMore(layoutManager));
 
         initData();
 
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerToggle = new ActionBarDrawerToggle(this, mBinding.drawerLayout, R.string.open, R.string.close);
         drawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.blue1));
-        drawerLayout.addDrawerListener(drawerToggle);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        mBinding.drawerLayout.addDrawerListener(drawerToggle);
+        mBinding.toolbar.setTitle("");
+        setSupportActionBar(mBinding.toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         drawerToggle.syncState();
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+        mBinding.viewPager.setAdapter(viewPagerAdapter);
+        mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
         startAutoScroll();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            window.setStatusBarColor(Color.TRANSPARENT);
-        }
+        Window window = getWindow();
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        window.setStatusBarColor(Color.TRANSPARENT);
 
         int scrollLimit = 256;
 
-        scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+        mBinding.nestedScrollHome.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             float alpha = Math.min(1, (float) scrollY / scrollLimit);
             int alphaInt = (int) (alpha * 255);
             if (scrollY > oldScrollY) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setStatusBarColor(Color.argb(alphaInt, 0, 169, 255));
                 }
-                toolbar.setBackgroundColor(Color.argb(alphaInt, 0, 169, 255));
+                mBinding.toolbar.setBackgroundColor(Color.argb(alphaInt, 0, 169, 255));
                 drawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
             } else if (scrollY == 0) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setStatusBarColor(Color.TRANSPARENT);
                 }
-                toolbar.setBackgroundColor(Color.TRANSPARENT);
+                mBinding.toolbar.setBackgroundColor(Color.TRANSPARENT);
                 drawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.blue1));
             }
 
-            if (scrollY > 270) {
+            if (scrollY > 380) {
                 showStickyFilterBar();
             } else {
                 hideStickyFilterBar();
+            }
+
+            if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                pageNumber++;
+                loadProductData(pageNumber);
             }
         });
 
@@ -195,8 +182,7 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchByName(mBinding.searchEdt.getText().toString().trim());
                 hideKeyboard();
-                scrollView.scrollTo(0, 0);
-
+                mBinding.nestedScrollHome.scrollTo(0, 0);
                 return true;
             }
             return false;
@@ -223,12 +209,12 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     }
 
     private void sortPriceAsc() {
-        scrollView.scrollTo(0, 0);
+        mBinding.nestedScrollHome.scrollTo(0, 0);
         noiBatAdapter.sortPriceAsc();
     }
 
     private void sortPriceDesc() {
-        scrollView.scrollTo(0, 0);
+        mBinding.nestedScrollHome.scrollTo(0, 0);
         noiBatAdapter.sortPriceDesc();
     }
 
@@ -244,7 +230,13 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
 
     private void initData() {
         menuPresenter.getCategories();
-        productPresenter.getProductPage(3);
+        loadProductData(1);
+    }
+
+    private void loadProductData(int pageNumber) {
+        if (pageNumber > pageLimit) return;
+        mBinding.progressCircular.setVisibility(View.VISIBLE);
+        productPresenter.getProductPage(pageNumber);
     }
 
     @Override
@@ -274,23 +266,9 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
             if (currentPosition >= viewPagerAdapter.getCount()) {
                 currentPosition = 0;
             }
-            viewPager.setCurrentItem(currentPosition);
+            mBinding.viewPager.setCurrentItem(currentPosition);
             startAutoScroll();
         }, 3000);
-    }
-
-    //TODO: MinhNTn fake data
-    private void fakeDataProduct() {
-        for (int i = 0; i < 10; i++) {
-            ProductResponse productResponse = new ProductResponse();
-            productResponse.description = "Description " + i;
-            productResponse.image = new ArrayList<>();
-            productResponse.image.add("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg");
-            productResponse.image.add("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg");
-            productResponse.image.add("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg");
-            productResponse.price = 1000;
-            productResponseList.add(productResponse);
-        }
     }
 
     @Override
@@ -313,12 +291,16 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     public void onGetCategoriesSuccess(List<ProductCategory> categories) {
         initFilterBar(categories);
         System.out.println("Init filterbar");
-        scrollView.scrollTo(0, 0);
+        mBinding.nestedScrollHome.scrollTo(0, 0);
+    }
+
+    @Override
+    public void onGetProductPageFail(int page) {
+        mBinding.progressCircular.setVisibility(View.GONE);
+        pageLimit = page - 1;
     }
 
     public void initFilterBar(List<ProductCategory> categories) {
-        List<String> categoryNames = new ArrayList<>();
-        categoryNames.add("Tất cả");
         for (ProductCategory c : categories) {
             categoryNames.add(c.name);
         }
@@ -330,8 +312,9 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         mBinding.spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterCategoryPosition = position;
                 mBinding.spinnerCategoryFixed.setSelection(position);
-                filterByCategory(categoryNames.get(position));
+                filterByCategory(categoryNames.get(filterCategoryPosition));
             }
 
             @Override
@@ -342,8 +325,9 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         mBinding.spinnerCategoryFixed.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterCategoryPosition = position;
                 mBinding.spinnerCategory.setSelection(position);
-                filterByCategory(categoryNames.get(position));
+                filterByCategory(categoryNames.get(filterCategoryPosition));
             }
 
             @Override
@@ -355,9 +339,14 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
 
     @Override
     public void onGetProductPageSuccess(int page, List<ProductResponse> productResponseList) {
-        this.productResponseList = productResponseList;
+        mBinding.progressCircular.setVisibility(View.GONE);
+        System.out.println("Before size: " + this.productResponseList.size());
+        this.productResponseList.addAll(productResponseList);
+        System.out.println("After size: " + this.productResponseList.size());
 
-        noiBatAdapter.updateData(productResponseList);
+        filterByCategory(categoryNames.get(filterCategoryPosition));
+        if (priceSortMode == PriceSortMode.ASC) sortPriceAsc();
+        else if (priceSortMode == PriceSortMode.DESC) sortPriceDesc();
 
         for (ProductResponse pr : productResponseList) {
             productPresenter.getProductQuantity(pr._id);
@@ -383,7 +372,7 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         DataManager.getInstance().productQuantityList.add(pq);
         int index = -1;
         for (ProductResponse pr : productResponseList) {
-            if (pr._id.equals(productId)) index = productResponseList.indexOf(pr);
+            if (Utils.compare(pr._id, productId)) index = productResponseList.indexOf(pr);
         }
         if (index != -1) {
             noiBatAdapter.notifyItemChanged(index);

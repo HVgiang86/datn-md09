@@ -9,6 +9,8 @@ public interface ProductContract {
     interface View {
         void onGetProductPageSuccess(int page, List<ProductResponse> productResponseList);
 
+        void onGetProductPageFail(int page);
+
         void onSearchProductSuccess(List<ProductResponse> productResponseList);
 
         void onGetProductQuantitySuccess(String productId, int quantity);

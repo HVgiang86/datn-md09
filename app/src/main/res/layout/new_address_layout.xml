@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/gray"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nhập địa chỉ"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/label_province"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nhập tỉnh/thành phố"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label" />
+
+        <EditText
+            android:id="@+id/input_province"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Province"
+            android:lines="1"
+            android:textSize="14sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/label_province"
+            app:layout_constraintStart_toStartOf="@id/input_commune" />
+
+        <TextView
+            android:id="@+id/label_district"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nhập quận/huyện"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_province" />
+
+        <EditText
+            android:id="@+id/input_district"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="district"
+            android:lines="1"
+            app:layout_constraintBaseline_toBaselineOf="@id/label_district"
+            app:layout_constraintStart_toStartOf="@id/input_commune" />
+
+        <TextView
+            android:id="@+id/label_commune"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nhập xã/phường/thị trấn"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_district" />
+
+        <EditText
+            android:id="@+id/input_commune"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:hint="commune"
+            android:lines="1"
+            app:layout_constraintBaseline_toBaselineOf="@id/label_commune"
+            app:layout_constraintStart_toEndOf="@id/label_commune" />
+
+        <TextView
+            android:id="@+id/label_street"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nhập số nhà, tên đường"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_commune" />
+
+        <EditText
+            android:id="@+id/input_street"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="street name"
+            android:lines="1"
+            app:layout_constraintBaseline_toBaselineOf="@id/label_street"
+            app:layout_constraintStart_toStartOf="@id/input_commune" />
+
+        <Button
+            android:id="@+id/button_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bgr_btn_login"
+            android:text="Thêm"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_street" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
+
