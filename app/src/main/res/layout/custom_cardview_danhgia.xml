@@ -1,80 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    android:id="@+id/cardviewNoiBat"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardviewNoiBat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:ignore="MissingConstraints"
     android:layout_marginTop="10dp"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:ignore="MissingConstraints">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
             <ImageView
                 android:id="@+id/image_avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_user"/>
+                android:src="@drawable/ic_user" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="10dp">
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/text_uname"
                     android:layout_width="match_parent"
-                    android:textColor="@color/black"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:text="Manhnt"/>
+                    android:text="Manhnt"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/text_rating"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/black"
                     android:layout_height="wrap_content"
-                    android:text="Số sao"/>
+                    android:layout_marginTop="8dp"
+                    android:text="Số sao"
+                    android:textColor="@color/black" />
+
                 <TextView
                     android:id="@+id/text_type"
-                    android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Phân loai: Đen - L"/>
+                    android:layout_marginTop="8dp"
+                    android:text="Phân loai: Đen - L" />
+
                 <TextView
                     android:id="@+id/text_comment"
-                    android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="5dp"
-                    android:textColor="@color/black"
-                    android:text="Sản phẩm đúng như mô tả nhé, hàng cônng kềnh nhưng đóng gói rất ok nên k ảnh hưởng chất lượng, sẽ ủng hộ shop dài nha"/>
+                    android:text="Sản phẩm đúng như mô tả nhé, hàng cônng kềnh nhưng đóng gói rất ok nên k ảnh hưởng chất lượng, sẽ ủng hộ shop dài nha"
+                    android:textColor="@color/black" />
+
                 <ImageView
                     android:id="@+id/image_product"
-                    android:layout_marginTop="10dp"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/backgroundplashscreen"
-                    android:scaleType="centerCrop"/>
+                    android:layout_marginTop="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/backgroundplashscreen" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="11dp"
                     android:layout_marginTop="10dp"
-                    android:text="21-11-2023 17:34"/>
+                    android:text="21-11-2023 17:34"
+                    android:textSize="11dp" />
             </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/container_product_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/gray"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image_product_preview"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/backgroundplashscreen" />
+
+            <TextView
+                android:id="@+id/text_product_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:text="Quan dui ao ba lo"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray3"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:background="@color/gray3" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

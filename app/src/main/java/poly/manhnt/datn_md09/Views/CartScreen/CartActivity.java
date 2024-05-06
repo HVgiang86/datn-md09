@@ -28,7 +28,7 @@ import poly.manhnt.datn_md09.databinding.ActivityCartBinding;
 
 public class CartActivity extends AppCompatActivity implements CartAdapter.OnItemInteractListener, CartContract.View, UserDiscountContract.View {
 
-    public static final String KEY_CARD_ID_ARRAY = "KEY_CARD_ID_ARRAY";
+    public static final String KEY_CART_ID_ARRAY = "KEY_CART_ID_ARRAY";
     public static final String KEY_AMOUNT = "KEY_AMOUNT";
     public static final String KEY_DISCOUNT_ID = "KEY_DISCOUNT_ID";
     private int discount = 0;
@@ -62,6 +62,8 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnIte
         binding.buttonOrderConfirm.setOnClickListener(v -> {
             doPayment();
         });
+
+        binding.toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     private void doPayment() {
@@ -69,7 +71,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnIte
         intent.putExtra(KEY_AMOUNT, finalPrice);
         intent.putExtra(KEY_DISCOUNT_ID, discountId);
         String[] idCarts = adapter.getCartIdArray();
-        intent.putExtra(KEY_CARD_ID_ARRAY, idCarts);
+        intent.putExtra(KEY_CART_ID_ARRAY, idCarts);
         startActivity(intent);
     }
 

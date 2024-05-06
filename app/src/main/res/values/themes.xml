@@ -26,4 +26,13 @@
         <item name="android:background">@drawable/bg_spinner</item>
     </style>
 
+    <style name="MyDialogTheme" parent="android:style/Theme.Translucent">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:fontFamily">@font/montserrat_medium</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowSoftInputMode">adjustResize|stateAlwaysHidden</item>
+    </style>
+
 </resources>

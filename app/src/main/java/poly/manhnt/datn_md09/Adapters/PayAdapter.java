@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import poly.manhnt.datn_md09.Models.cart.Cart;
@@ -46,12 +48,14 @@ public class PayAdapter extends RecyclerView.Adapter<PayAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemPaymentCartBinding binding = holder.binding;
         Cart cart = carts.get(position);
-        binding.textName.setText("cart.sizeColor.product.name");
+        binding.textName.setText(cart.sizeColor.product.name);
         binding.textPrice.setText("" + cart.sizeColor.product.getFinalPrice());
-        binding.textQuantity.setText("" + cart.quantity);
+        binding.textQuantity.setText("x" + cart.quantity);
         String color = cart.sizeColor.color.colorName;
         String size = cart.sizeColor.size.sizeName;
         binding.textSizeColor.setText(size + ", " + color);
+
+        Glide.with(context).load(cart.sizeColor.product.image.get(0)).centerCrop().into(binding.imageProduct);
 
         holder.itemView.setOnClickListener(v -> listener.onItemClickListener(cart.sizeColor.product._id));
     }

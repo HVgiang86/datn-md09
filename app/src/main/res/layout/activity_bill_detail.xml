@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical"
+    tools:context=".Views.BillDetail.BillDetailActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            app:navigationIcon="@drawable/ic_back"
+            app:title="Lịch sử đặt hàng"
+            app:titleMarginStart="16dp">
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar">
+
+        <LinearLayout
+            android:id="@+id/container_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_location" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Địa chỉ nhận hàng"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/text_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Nguyễn Thế Mạnh"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/text_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(+84) 3888 844 375"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/text_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="Chưa thiết lập địa chỉ, bấm để thêm"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:layout_below="@id/container_address"
+            android:background="#C3C3C3" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_bill_cart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider1"
+            android:background="@color/gray"
+            android:paddingTop="10dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recycler_bill_cart"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_pay"
+                    android:gravity="center_vertical"
+                    android:text=" Chi tiết thanh toán"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity=""
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:text="Tổng tiền hàng"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity=""
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:text="Giảm giá"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity=""
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:text="Tổng tiền phí vận chuyển"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Tổng thanh toán"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingTop="28dp">
+
+                <TextView
+                    android:id="@+id/text_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|end"
+                    android:text="đ34.000"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/text_discount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical|end"
+                    android:text="đ78.600"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/text_shipping_fee"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical|end"
+                    android:text="đ78.600"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/text_total_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|end"
+                    android:text="đ555.55.555"
+                    android:textColor="@color/blue1"
+                    android:textSize="15dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

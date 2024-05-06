@@ -150,7 +150,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="6dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/filter_container"/>
+                    app:layout_constraintTop_toBottomOf="@id/filter_container" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -212,8 +212,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@id/container_bottom_bar"
-            android:layout_centerHorizontal="true"
-            android:background="@color/gray" />
+            android:layout_centerHorizontal="true" />
 
         <FrameLayout
             android:id="@+id/container_bottom_bar"

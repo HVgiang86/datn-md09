@@ -1,3 +1,7 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+
 plugins {
     alias(libs.plugins.androidApplication)
 }
@@ -14,6 +18,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            val localProperties = Properties()
+            localProperties.load(FileInputStream(localPropertiesFile))
+            buildConfigField("String", "API_URL_BASE", localProperties.getProperty("API_URL_BASE"))
+        }
     }
 
     buildTypes {
@@ -33,6 +45,7 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        android.buildFeatures.buildConfig =  true
 
     }
 }
@@ -50,7 +63,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("se.emilsjolander:StickyScrollViewItems:1.1.0")
+    implementation (libs.lottie)
 
 
 }

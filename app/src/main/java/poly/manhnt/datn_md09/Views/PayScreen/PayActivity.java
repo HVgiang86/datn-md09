@@ -2,8 +2,12 @@ package poly.manhnt.datn_md09.Views.PayScreen;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -33,13 +37,18 @@ import poly.manhnt.datn_md09.Presenters.payment.PaymentPresenter;
 import poly.manhnt.datn_md09.Views.AddressChoiceScreen.AddressChoiceActivity;
 import poly.manhnt.datn_md09.Views.CartScreen.CartActivity;
 import poly.manhnt.datn_md09.Views.DeliveryMethodScreen.DeliveryMethodActivity;
+import poly.manhnt.datn_md09.Views.HomeScreen.HomeActivity;
+import poly.manhnt.datn_md09.Views.popup.LoadingPopupFragment;
+import poly.manhnt.datn_md09.Views.popup.OrderFailFragment;
+import poly.manhnt.datn_md09.Views.popup.OrderSuccessFragment;
 import poly.manhnt.datn_md09.databinding.ActivityPayBinding;
 import poly.manhnt.datn_md09.utils.Utils;
 
 
-public class PayActivity extends AppCompatActivity implements CartContract.PaymentView, PaymentContract.View, PayAdapter.OnItemClickListener, AddressContract.ViewPayment, UserDiscountContract.View {
+public class PayActivity extends AppCompatActivity implements CartContract.PaymentView, PaymentContract.View, PayAdapter.OnItemClickListener, AddressContract.ViewPayment, UserDiscountContract.View, OrderSuccessFragment.OnButtonAcceptClickListener, OrderFailFragment.OnButtonAcceptClickListener {
     private final String[] paymentMethodString = {"Thanh toán online", "Thanh toán khi nhận hàng"};
     private final List<Cart> cartList = new ArrayList<>();
+    private final String LOADING_POPUP_TAG = "loading_popup_tag";
     PayAdapter payAdapter;
     private DeliveryMethod deliveryMethod = DataManager.getInstance().deliveryMethods.get(0);
     private int finalPrice = 0;
@@ -54,6 +63,7 @@ public class PayActivity extends AppCompatActivity implements CartContract.Payme
     private UserDiscountPresenter discountPresenter;
     private PaymentMethod paymentMethod = PaymentMethod.ONLINE;
     private ActivityPayBinding binding;
+    private String paymentRedirectedUrl = "";
     private boolean hasAddress = false;
     private boolean hasIdCarts = false;
 
@@ -64,8 +74,8 @@ public class PayActivity extends AppCompatActivity implements CartContract.Payme
         setContentView(binding.getRoot());
 
         Intent intent = getIntent();
-        if (intent.hasExtra(CartActivity.KEY_CARD_ID_ARRAY)) {
-            idCarts = intent.getStringArrayExtra(CartActivity.KEY_CARD_ID_ARRAY);
+        if (intent.hasExtra(CartActivity.KEY_CART_ID_ARRAY)) {
+            idCarts = intent.getStringArrayExtra(CartActivity.KEY_CART_ID_ARRAY);
             hasIdCarts = true;
         }
         if (intent.hasExtra(CartActivity.KEY_AMOUNT) && intent.hasExtra(CartActivity.KEY_DISCOUNT_ID)) {
@@ -94,6 +104,8 @@ public class PayActivity extends AppCompatActivity implements CartContract.Payme
         binding.containerDeliveryMethod.setOnClickListener(v -> changeDeliveryMethod());
 
         binding.buttonChangeAddress.setOnClickListener(v -> changeAddress());
+
+        binding.toolbar.setNavigationOnClickListener(v -> finish());
 
         initDiscountSpinner();
         calculateTotalPrice();
@@ -128,12 +140,9 @@ public class PayActivity extends AppCompatActivity implements CartContract.Payme
                     deliveryMethod = method;
                 }
             }
-
             updateDeliveryMethod();
             calculateTotalPrice();
         }
-
-
     }
 
     private void updateDeliveryMethod() {
@@ -149,17 +158,72 @@ public class PayActivity extends AppCompatActivity implements CartContract.Payme
     }
 
     private void doPayment() {
+        if (!hasIdCarts || !hasAddress) return;
+
+        LoadingPopupFragment loadingPopup = new LoadingPopupFragment();
+        loadingPopup.show(getSupportFragmentManager(), LOADING_POPUP_TAG);
+
         if (paymentMethod == PaymentMethod.ONLINE)
             paymentPresenter.createOnlinePayment(DataManager.getInstance().getUserLogin.idUser, idCarts, amount, discountId);
         else
             paymentPresenter.createBill(DataManager.getInstance().getUserLogin.idUser, idCarts, amount, discountId);
     }
 
+    private void dismissLoadingPopup() {
+        LoadingPopupFragment loadingPopup = (LoadingPopupFragment) getSupportFragmentManager().findFragmentByTag(LOADING_POPUP_TAG);
+        if (loadingPopup != null) {
+            loadingPopup.dismiss();
+        }
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     private void openVpnWebView(String url) {
-        System.out.println("URL: " + url);
+        System.out.println("URL PAYMENT: " + url);
+
         binding.webview.setVisibility(View.VISIBLE);
         binding.webview.getSettings().setJavaScriptEnabled(true);
+
+        WebViewClient webViewClient = new WebViewClient() {
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                paymentRedirectedUrl = url;
+                super.onPageStarted(view, url, favicon);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                // Page loading finished
+                super.onPageFinished(view, url);
+                System.out.println("Page load Finished. URL: " + url);
+
+                if (paymentRedirectedUrl.contains("Error")) {
+                    binding.webview.setVisibility(View.GONE);
+                    System.out.println("Finished. payment URL: " + paymentRedirectedUrl);
+                    OrderFailFragment orderFailFragment = new OrderFailFragment(PayActivity.this);
+                    orderFailFragment.show(getSupportFragmentManager(), "OrderFailFragment");
+                } else if (paymentRedirectedUrl.contains("vnp_TransactionStatus=00")) {
+                    binding.webview.setVisibility(View.GONE);
+                    System.out.println("Finished. payment URL: " + paymentRedirectedUrl);
+
+                    OrderSuccessFragment oderSuccessFragment = new OrderSuccessFragment(PayActivity.this);
+                    oderSuccessFragment.show(getSupportFragmentManager(), "oderSuccessFragment");
+                }
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                binding.webview.setVisibility(View.GONE);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                paymentRedirectedUrl = request.getUrl().toString();
+                System.out.println("Redirect. URL: " + paymentRedirectedUrl);
+                return super.shouldOverrideUrlLoading(view, request);
+            }
+        };
+        binding.webview.setWebViewClient(webViewClient);
         binding.webview.loadUrl(url);
     }
 
@@ -170,6 +234,7 @@ public class PayActivity extends AppCompatActivity implements CartContract.Payme
         }
 
         System.out.println("Original price: " + totalOrigin);
+        System.out.println("Discount id: " + discountId);
 
         int discountAmount = 0;
         for (UserDiscount discount : discounts) {
@@ -238,7 +303,12 @@ public class PayActivity extends AppCompatActivity implements CartContract.Payme
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (discounts.size() != 0) {
-                    discountId = discounts.get(position - 1).id;
+                    if (position > 0) {
+                        discountId = discounts.get(position - 1).id;
+                    } else {
+                        discountId = "";
+
+                    }
                     calculateTotalPrice();
                 }
             }
@@ -264,7 +334,6 @@ public class PayActivity extends AppCompatActivity implements CartContract.Payme
                 }
             }
         }
-
         payAdapter.updateData(cartList);
         calculateTotalPrice();
     }
@@ -282,22 +351,29 @@ public class PayActivity extends AppCompatActivity implements CartContract.Payme
 
     @Override
     public void onCreateBillSuccess() {
+        dismissLoadingPopup();
         Toast.makeText(this, "Order successfully", Toast.LENGTH_SHORT).show();
+        OrderSuccessFragment orderSuccessFragment = new OrderSuccessFragment(this);
+        orderSuccessFragment.show(getSupportFragmentManager(), "OrderSuccessFragment");
+
     }
 
     @Override
     public void onCreateBillFail() {
+        dismissLoadingPopup();
         Toast.makeText(this, "Order fail", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCreateOnlinePaymentSuccess(String url) {
         //TODO IMPLEMENT
+        dismissLoadingPopup();
         openVpnWebView(url);
     }
 
     @Override
     public void onCreateOnlinePaymentFail(Exception e) {
+        dismissLoadingPopup();
         Toast.makeText(this, "Fail create payment", Toast.LENGTH_SHORT).show();
     }
 
@@ -327,6 +403,20 @@ public class PayActivity extends AppCompatActivity implements CartContract.Payme
         discounts = discountList;
         System.out.println("On GetUserDiscount Succees");
         initDiscountSpinner();
+    }
+
+    @Override
+    public void onOrderFailButtonAcceptClick() {
+        //no-op
+        binding.webview.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onOrderSuccessButtonAcceptClick() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        PayActivity.this.finish();
     }
 
     enum PaymentMethod {

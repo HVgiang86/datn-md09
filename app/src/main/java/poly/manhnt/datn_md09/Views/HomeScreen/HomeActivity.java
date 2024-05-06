@@ -233,10 +233,12 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
         loadProductData(1);
     }
 
+
     private void loadProductData(int pageNumber) {
         if (pageNumber > pageLimit) return;
         mBinding.progressCircular.setVisibility(View.VISIBLE);
         productPresenter.getProductPage(pageNumber);
+
     }
 
     @Override
@@ -277,6 +279,7 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     }
 
     private void startDetailActivity(String productId) {
+        System.out.println("Open detail, id: " + productId);
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(EXTRA_PRODUCT_ID, productId);
         startActivity(intent);
@@ -356,6 +359,10 @@ public class HomeActivity extends AppCompatActivity implements NoiBatAdapter.OnP
     @Override
     public void onSearchProductSuccess(List<ProductResponse> productResponseList) {
         this.productResponseList = productResponseList;
+        for (ProductResponse pr : productResponseList) {
+            System.out.println("Search success: " + pr.toString() + "\t" + pr._id);
+        }
+
         noiBatAdapter.updateData(productResponseList);
 
         for (ProductResponse pr : productResponseList) {

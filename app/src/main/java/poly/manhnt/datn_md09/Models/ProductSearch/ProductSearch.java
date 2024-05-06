@@ -18,6 +18,7 @@ public class ProductSearch {
 
     public ProductResponse copy() {
         ProductResponse pr = new ProductResponse();
+        pr._id = _id;
         pr.name = name;
         pr.price = price;
         pr.__v = __v;

@@ -2,9 +2,16 @@ package poly.manhnt.datn_md09.api;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import poly.manhnt.datn_md09.Models.Bill.BillDetailResponse;
+import poly.manhnt.datn_md09.Models.Bill.BillResponse;
+import poly.manhnt.datn_md09.Models.Bill.BillStatusRequest;
 import poly.manhnt.datn_md09.Models.CategoryIdResponse;
 import poly.manhnt.datn_md09.Models.MessageResponse;
 import poly.manhnt.datn_md09.Models.ProductComment.ProductComment;
+import poly.manhnt.datn_md09.Models.ProductComment.ProductRatingRequest;
+import poly.manhnt.datn_md09.Models.ProductComment.ProductRatingResponse;
 import poly.manhnt.datn_md09.Models.ProductDetail.ProductDetailResponse;
 import poly.manhnt.datn_md09.Models.ProductResponse;
 import poly.manhnt.datn_md09.Models.ProductSearch.ProductSearchResponse;
@@ -27,7 +34,10 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -96,4 +106,22 @@ public interface ApiService {
     @POST("addbill/{uid}")
     Call<MessageResponse> addBill(@Path("uid") String uid, @Body PaymentRequest request);
 
+    @GET("bill/{uid}")
+    Call<BillResponse> getBillList(@Path("uid") String uid);
+
+    @GET("bill-by-id/{billId}")
+    Call<BillDetailResponse> getBillDetail(@Path("billId") String billId);
+
+    @DELETE("bill/{billId}")
+    Call<Void> deleteBill(@Path("billId") String billId);
+
+    @PUT("bill/{billId}")
+    Call<Void> updateBillStatus(@Path("billId") String billId, @Body BillStatusRequest request);
+
+    @Multipart
+    @POST("comment")
+    Call<Void> addComment(@Part List<MultipartBody.Part> images, @Part("UserId") RequestBody userId, @Part("ProductId") RequestBody productId, @Part("ProductDetailId") RequestBody productDetailId, @Part("Comment") RequestBody comment, @Part("rating") RequestBody rating);
+
+    @POST("comment-by-id")
+    Call<ProductRatingResponse> getCommentById(@Body ProductRatingRequest request);
 }

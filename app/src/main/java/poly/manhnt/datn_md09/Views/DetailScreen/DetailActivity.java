@@ -3,6 +3,7 @@ package poly.manhnt.datn_md09.Views.DetailScreen;
 import static poly.manhnt.datn_md09.Views.HomeScreen.HomeActivity.EXTRA_PRODUCT_ID;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,22 +30,32 @@ import poly.manhnt.datn_md09.DataManager;
 import poly.manhnt.datn_md09.Models.ProductComment.ProductComment;
 import poly.manhnt.datn_md09.Models.ProductResponse;
 import poly.manhnt.datn_md09.Models.ProductSizeColor.ProductSizeColor;
+import poly.manhnt.datn_md09.Models.cart.Cart;
 import poly.manhnt.datn_md09.Presenters.ProductDetailPresenter.ProductDetailContract;
 import poly.manhnt.datn_md09.Presenters.ProductDetailPresenter.ProductDetailPresenter;
+import poly.manhnt.datn_md09.Presenters.cart.CartContract;
+import poly.manhnt.datn_md09.Presenters.cart.CartPresenter;
 import poly.manhnt.datn_md09.R;
+import poly.manhnt.datn_md09.Views.CartScreen.CartActivity;
+import poly.manhnt.datn_md09.Views.PayScreen.PayActivity;
+import poly.manhnt.datn_md09.Views.popup.LoadingPopupFragment;
 import poly.manhnt.datn_md09.databinding.ActivityDetailBinding;
+import poly.manhnt.datn_md09.utils.Utils;
 
-public class DetailActivity extends AppCompatActivity implements ProductDetailContract.View {
+public class DetailActivity extends AppCompatActivity implements ProductDetailContract.View, CartContract.PaymentView {
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private final String LOADING_POPUP_TAG = "loading_popup_tag";
     DanhGiaAdapter danhGiaAdapter;
-    private int quantity = 0;
+    private int quantity = 1;
     private boolean isGotSizeColorList = false;
     private List<ProductSizeColor> sizeColorList;
     private String selectedSize;
     private String selectedColor;
     private ProductDetailPresenter presenter;
+    private CartPresenter cartPresenter;
     private ActivityDetailBinding mBinding;
     private BottomSheetBehavior mSheetBehavior;
+    private String buyNowSizeColorId = "";
     private int currentPosition = 0;
     private AddToCartMode confirmCartMode;
     private boolean canAddCart = false;
@@ -58,6 +69,12 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
 
         presenter = new ProductDetailPresenter();
         presenter.setView(this);
+        cartPresenter = new CartPresenter(this);
+
+        if (!getIntent().hasExtra(EXTRA_PRODUCT_ID)) {
+            Toast.makeText(this, "load fail", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         String productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
         if (productId != null && !productId.isEmpty()) {
@@ -82,6 +99,7 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
 
         mBinding.buttonConfirmAddToCart.setOnClickListener(v -> {
             if (confirmCartMode == AddToCartMode.ADD_TO_CART) addToCart();
+            if (confirmCartMode == AddToCartMode.BUY_NOW) addToCart();
         });
 
         LinearLayout llBottomSheet = findViewById(R.id.bottom_sheet);
@@ -98,11 +116,25 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
             quantity = quantity <= 1 ? 0 : quantity - 1;
             updateQuantityText();
         });
+
+        mBinding.toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     @SuppressLint("SetTextI18n")
     private void updateQuantityText() {
         mBinding.textQuantity.setText("" + quantity);
+    }
+
+    private void showLoadingPopup() {
+        LoadingPopupFragment popupLoading = new LoadingPopupFragment();
+        popupLoading.show(getSupportFragmentManager(), LOADING_POPUP_TAG);
+    }
+
+    private void hideLoadingPopup() {
+        LoadingPopupFragment popupLoading = (LoadingPopupFragment) getSupportFragmentManager().findFragmentByTag(LOADING_POPUP_TAG);
+        if (popupLoading != null) {
+            popupLoading.dismiss();
+        }
     }
 
 
@@ -155,6 +187,8 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
     private void addToCart() {
         for (ProductSizeColor psc : sizeColorList) {
             if (psc.size.sizeName.equals(selectedSize) && psc.color.colorName.equals(selectedColor)) {
+                buyNowSizeColorId = psc.sizeColorId;
+                showLoadingPopup();
                 presenter.addToCart(DataManager.getInstance().getUserLogin.idUser, psc.sizeColorId, quantity);
             }
         }
@@ -193,12 +227,27 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
 
     @Override
     public void onAddToCartSuccess() {
-        Toast.makeText(this, "Sản phẩm đã được thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
-        mSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        hideLoadingPopup();
+        if (confirmCartMode == AddToCartMode.ADD_TO_CART) {
+            Toast.makeText(this, "Sản phẩm đã được thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+            mSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        } else {
+            cartPresenter.getCartList(DataManager.getInstance().getUserLogin.idUser);
+        }
+    }
+
+    private void openOrderScreen(String cartId) {
+        Intent intent = new Intent(this, PayActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        String[] cartIds = new String[1];
+        cartIds[0] = cartId;
+        intent.putExtra(CartActivity.KEY_CART_ID_ARRAY, cartIds);
+        startActivity(intent);
     }
 
     @Override
     public void onAddToCartFail(Exception e) {
+        hideLoadingPopup();
         Toast.makeText(this, "Không thể thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
     }
 
@@ -261,6 +310,21 @@ public class DetailActivity extends AppCompatActivity implements ProductDetailCo
         Toast.makeText(this, "Sản phẩm đã bán hết", Toast.LENGTH_SHORT).show();
         canAddCart = false;
         mBinding.textSoldOut.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onGetCartListSuccess(List<Cart> carts) {
+        for (Cart cart : carts) {
+            if (Utils.compare(cart.sizeColor.sizeColorId, buyNowSizeColorId)) {
+                openOrderScreen(cart._id);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void onGetCartFail(Exception e) {
+        Toast.makeText(this, "Không thể lấy giỏ hàng!", Toast.LENGTH_SHORT).show();
     }
 
     public enum AddToCartMode {

@@ -98,7 +98,6 @@ public class NoiBatAdapter extends RecyclerView.Adapter<NoiBatAdapter.ViewHolder
             holder.binding.imvBackground.setVisibility(View.VISIBLE);
             holder.binding.containerSoldOut.setVisibility(View.GONE);
             Glide.with(context).load(productResponse.image.get(0)).placeholder(R.drawable.backgroundplashscreen).error(R.drawable.backgroundplashscreen).into(holder.imvBackground);
-
         }
 
         holder.itemView.setOnClickListener(v -> {

@@ -12,41 +12,42 @@
         android:layout_height="match_parent"
         tools:context="poly.manhnt.datn_md09.Views.DetailScreen">
 
-        <!--        <androidx.appcompat.widget.Toolbar-->
-        <!--            android:id="@+id/toolbar"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:background="@android:color/transparent"-->
-        <!--            android:elevation="1dp"-->
-        <!--            android:fitsSystemWindows="true"-->
-        <!--            android:outlineProvider="@null">-->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:elevation="1dp"
+            android:fitsSystemWindows="true"
+            android:outlineProvider="@null"
+            app:navigationIcon="@drawable/ic_back">
 
-        <!--            <LinearLayout-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginTop="8dp"-->
-        <!--                android:layout_marginRight="8dp"-->
-        <!--                android:layout_marginBottom="8dp"-->
-        <!--                android:background="@drawable/bgsearch"-->
-        <!--                android:orientation="horizontal">-->
+            <!--                    <LinearLayout-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginTop="8dp"-->
+            <!--                        android:layout_marginRight="8dp"-->
+            <!--                        android:layout_marginBottom="8dp"-->
+            <!--                        android:background="@drawable/bgsearch"-->
+            <!--                        android:orientation="horizontal">-->
 
-        <!--                <Button-->
-        <!--                    android:layout_width="match_parent"-->
-        <!--                    android:layout_height="35dp"-->
-        <!--                    android:layout_marginTop="8dp"-->
-        <!--                    android:layout_marginRight="8dp"-->
-        <!--                    android:layout_marginBottom="8dp"-->
-        <!--                    android:layout_weight="1"-->
-        <!--                    android:background="@android:color/transparent"-->
-        <!--                    android:drawableLeft="@drawable/ic_search"-->
-        <!--                    android:paddingLeft="10dp"-->
-        <!--                    android:text="Tìm kiếm trên FModel"-->
-        <!--                    android:textAlignment="textStart"-->
-        <!--                    android:textAllCaps="false"-->
-        <!--                    android:textColor="@color/blue2"-->
-        <!--                    android:textSize="12dp" />-->
-        <!--            </LinearLayout>-->
-        <!--        </androidx.appcompat.widget.Toolbar>-->
+            <!--                        <Button-->
+            <!--                            android:layout_width="match_parent"-->
+            <!--                            android:layout_height="35dp"-->
+            <!--                            android:layout_marginTop="8dp"-->
+            <!--                            android:layout_marginRight="8dp"-->
+            <!--                            android:layout_marginBottom="8dp"-->
+            <!--                            android:layout_weight="1"-->
+            <!--                            android:background="@android:color/transparent"-->
+            <!--                            android:drawableLeft="@drawable/ic_search"-->
+            <!--                            android:paddingLeft="10dp"-->
+            <!--                            android:text="Tìm kiếm trên FModel"-->
+            <!--                            android:textAlignment="textStart"-->
+            <!--                            android:textAllCaps="false"-->
+            <!--                            android:textColor="@color/blue2"-->
+            <!--                            android:textSize="12dp" />-->
+            <!--                    </LinearLayout>-->
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

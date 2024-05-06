@@ -2,7 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,6 +21,32 @@
         android:theme="@style/Theme.DATN_MD09"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".Views.Favorite.FavoriteProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.Rating.RatingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.UpdateProfile.UpdateProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.BillDetail.BillDetailActivity"
+            android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".Views.bill.BillListActivity"
+            android:exported="false" />
         <activity
             android:name=".Views.DeliveryMethodScreen.DeliveryMethodActivity"
             android:exported="false" />
