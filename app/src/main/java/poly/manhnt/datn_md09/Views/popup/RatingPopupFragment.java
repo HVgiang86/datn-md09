@@ -128,11 +128,13 @@ public class RatingPopupFragment extends DialogFragment {
 
         selectedImages.clear();
 
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(intent, 1);
+
+
     }
 
     @Override
@@ -181,11 +183,7 @@ public class RatingPopupFragment extends DialogFragment {
             // Do something with the selected image
             System.out.println("Selected image: " + uri.getPath());
             String path;
-            try {
-                path = FileUtils.getPath(requireContext(), uri);
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
+            path = FileUtils.getPathFromUri(requireContext(), uri);
             String filePath = path == null ? "" : path;
 
             System.out.println("File path: " + filePath);

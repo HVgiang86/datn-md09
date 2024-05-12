@@ -4,6 +4,7 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import poly.manhnt.datn_md09.Models.Account.ChangePasswordRequest;
 import poly.manhnt.datn_md09.Models.Bill.BillDetailResponse;
 import poly.manhnt.datn_md09.Models.Bill.BillResponse;
 import poly.manhnt.datn_md09.Models.Bill.BillStatusRequest;
@@ -124,4 +125,11 @@ public interface ApiService {
 
     @POST("comment-by-id")
     Call<ProductRatingResponse> getCommentById(@Body ProductRatingRequest request);
+
+    @PUT("change-password/{uid}")
+    Call<MessageResponse> changePassword(@Path("uid") String uid, @Body ChangePasswordRequest request);
+
+    @Multipart
+    @POST("users/{uid}")
+    Call<Void> changeAvatar(@Part MultipartBody.Part images, @Path("uid") String uid);
 }

@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Objects;
+
 import poly.manhnt.datn_md09.DataManager;
 import poly.manhnt.datn_md09.Models.model_login.LoginRequest;
 import poly.manhnt.datn_md09.Models.model_login.LoginResponse;
@@ -52,11 +54,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginUser() {
 
-//        String username = Objects.requireNonNull(edtUsername.getText()).toString().trim();
-//        String password = Objects.requireNonNull(edtPassword.getText()).toString().trim();
-
-          String username = "md09";
-          String password = "md09";
+        String username = Objects.requireNonNull(edtUsername.getText()).toString().trim();
+        String password = Objects.requireNonNull(edtPassword.getText()).toString().trim();
 
         RetrofitClient.getInstance().create(ApiService.class).loginUser(new LoginRequest(username, password)).enqueue(new Callback<LoginResponse>() {
             @Override
