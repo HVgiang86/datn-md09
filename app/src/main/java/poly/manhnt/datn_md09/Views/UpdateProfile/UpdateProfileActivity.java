@@ -116,11 +116,15 @@ public class UpdateProfileActivity extends AppCompatActivity implements AccountC
     }
 
     private void chooseFileFromStorage() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
                 != PackageManager.PERMISSION_GRANTED) {
-
+            System.out.println("Requesting permission");
             // Permission not granted, request it
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
+            String[] permissions = new String[]{
+                    Manifest.permission.READ_MEDIA_VIDEO,
+                    Manifest.permission.READ_MEDIA_IMAGES,
+            };
+            ActivityCompat.requestPermissions(this, permissions, 2);
         } else {
             // Permission already granted, proceed with accessing file
             // (use your method to parse the file path from the URI)
@@ -132,6 +136,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements AccountC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("Request code: " + requestCode);
         if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null) {
             if (data.getData() != null) {
                 Uri uri = data.getData();

@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.body().msg.equals(typeSuccess)) {
                     DataManager.getInstance().getUserLogin = response.body();
+                    System.out.println("Login success: " + DataManager.getInstance().getUserLogin.idUser);
                     navigateHomeScreen();
                 } else {
                     Toast.makeText(LoginActivity.this, response.body().msg, Toast.LENGTH_SHORT).show();
